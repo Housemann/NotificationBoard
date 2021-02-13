@@ -1,0 +1,15 @@
+{
+  "id": "{CD0C7974-6044-1795-4F88-9829021D2858}",
+  "name": "NotificationBoard",
+  "type": 3,
+  "vendor": "",
+  "aliases":
+  [
+      "Notification Board"
+  ],
+  "url": "https://github.com/Housemann/NotificationBoard",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "STNB"
+}
