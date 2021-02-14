@@ -71,7 +71,14 @@
 
 
 
-        public function SendToNotify(string $NotificationFor, string $Message, string $NotifyType, string $MailReciever)
+        public function SendToNotify(
+             string $NotificationFor
+            ,string $NotifyType
+            ,string $NotifyIcon
+            ,string $MailReciever
+            ,string $Message
+            ,int $ExpirationTime
+        )
         {
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
           $VarIdActionsScript = $this->GetBuffer("b_ActionsScriptId");
@@ -105,10 +112,12 @@
                 array(
                   "notifyWayName"     => $notifyWayName,          // Name für swich (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
                   "NotificationFor"   => $NotificationFor,        // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
-                  "InstanceId"        => $InstanceID,             // InstanceId für Benachrichtigungsweg übergeben
+                  "InstanceId"        => $InstanceID,             // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
                   "NotifyType"        => strtolower($NotifyType), // Information / Warnung / Alarm / Aufgabe
                   "Message"           => $Message,                // Nachricht
-                  "MailReciever"      => $MailReciever            // E-Mail empfänger
+                  "MailReciever"      => $MailReciever,           // E-Mail empfänger
+                  "ExpirationTime"    => $ExpirationTime,         // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+                  "NotifyIcon"        => $NotifyIcon              // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
                 )
               );
             }
@@ -155,6 +164,8 @@
   $NotifyType       = $_IPS[\'NotifyType\'];
   $Message 		      = $_IPS[\'Message\'];
   $MailReciever     = $_IPS[\'MailReciever\'];
+  $ExpirationTime   = $_IPS[\'ExpirationTime\'];
+  $NotifyIcon       = $_IPS[\'NotifyIcon\'];
 
   switch ($notifyWayName) {
     case "Fall1":     # Der Name muss Identisch sein, zu dem der im Formular hinterlegt wurde
