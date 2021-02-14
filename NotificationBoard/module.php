@@ -18,10 +18,7 @@
             // Formular E-Mail-Adresse 
             $this->RegisterPropertyString("email","");
 
-
-
-
-
+            // TestVar für Informationen
             $this->RegisterVariableString("test","test");
 
         }
@@ -67,22 +64,58 @@
           return json_encode($data);
         }	
 
-
-
-
-
+        ############################################################################################################################################
+        // Minimalaufruf
         public function SendToNotify(
+             string $NotificationFor
+            ,string $NotifyType
+            ,string $NotifyIcon
+            ,string $Message
+        )
+        {
+          $ExpirationTime = 0;
+          $MailReciever   = "";
+          $MediaID        = 0;
+
+          $return = $this->SendToNotifyIntern($NotificationFor , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
+          return $return;
+        }
+        ############################################################################################################################################
+        // Minimalaufruf mit Bildversenden
+        public function SendToNotifyImage(
+           string $NotificationFor
+          ,string $NotifyType
+          ,string $NotifyIcon
+          ,string $Message
+          ,int    $MediaID
+        )
+        {
+          $ExpirationTime = 0;
+          $MailReciever   = "";
+
+          $return = $this->SendToNotifyIntern($NotificationFor , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
+          return $return;
+        }
+        ############################################################################################################################################
+        ############################################################################################################################################
+        ############################################################################################################################################
+        // Interne Funktion zum uebergeben ans RunScript
+        private function SendToNotifyIntern(
              string $NotificationFor
             ,string $NotifyType
             ,string $NotifyIcon
             ,string $MailReciever
             ,string $Message
-            ,int $ExpirationTime
+            ,int    $MediaID
+            ,int  	$ExpirationTime
         )
         {
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
           $VarIdActionsScript = $this->GetBuffer("b_ActionsScriptId");
           $VarIdRunScript = $this->GetBuffer("b_RunScriptId");
+
+          // Variable mit Inhalt was gesendet wurde als Hilfe
+          $this->SetValue("test",json_encode($notificationWays));
 
           foreach($notificationWays as $notifiWay) {
             // Dummy instanz für Benachrichtigung erstellen z.B: Klingel, Müllabfuhr, ServiceMeldung, Heizung
@@ -107,35 +140,38 @@
             if(empty($MailReciever))
               $MailReciever =  $this->ReadPropertyString("email");
 
+            if($ExpirationTime == 0 || empty($ExpirationTime) || $ExpirationTime == "")
+              $ExpirationTime = 86400;
+
+            // Array for RunScript mit werten die uebergeben wurden
+            $RunScriptArray = array(
+                "notifyWayName"     => $notifyWayName,          // Name für swich (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
+                "NotificationFor"   => $NotificationFor,        // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
+                "InstanceId"        => $InstanceID,             // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
+                "NotifyType"        => strtolower($NotifyType), // Information / Warnung / Alarm / Aufgabe
+                "Message"           => $Message,                // Nachricht
+                "MailReciever"      => $MailReciever,           // E-Mail empfänger
+                "ExpirationTime"    => $ExpirationTime,         // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+                "NotifyIcon"        => $NotifyIcon,             // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
+                "MediaID"           => $MediaID                 // ID zum Medien Objekt in IPS
+                );
+
+
             if(GetValue($variableId) == true) {
-              IPS_RunScriptEx($VarIdRunScript,
-                array(
-                  "notifyWayName"     => $notifyWayName,          // Name für swich (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
-                  "NotificationFor"   => $NotificationFor,        // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
-                  "InstanceId"        => $InstanceID,             // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
-                  "NotifyType"        => strtolower($NotifyType), // Information / Warnung / Alarm / Aufgabe
-                  "Message"           => $Message,                // Nachricht
-                  "MailReciever"      => $MailReciever,           // E-Mail empfänger
-                  "ExpirationTime"    => $ExpirationTime,         // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
-                  "NotifyIcon"        => $NotifyIcon              // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
-                )
-              );
+              $Status = IPS_RunScriptEx($VarIdRunScript, $RunScriptArray);
+              
+              // Status in Array wandeln und Mergen
+              $ArrayStatusRunScipt = array("StatusRunScript" => $Status);
+              $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArray); 
+              
+              return $ArrayMerge;
             }
-
-
-
-
-
-            $this->SetValue("test",json_encode($notificationWays));
-
           }
         }
+        ############################################################################################################################################
+        ############################################################################################################################################
+        ############################################################################################################################################
           
-          
-          
-         
-
-
         private function CreateActionScript ($ParentID, $hidden=false)
         {
             $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);}?>';
@@ -166,6 +202,7 @@
   $MailReciever     = $_IPS[\'MailReciever\'];
   $ExpirationTime   = $_IPS[\'ExpirationTime\'];
   $NotifyIcon       = $_IPS[\'NotifyIcon\'];
+  $MediaID          = $_IPS[\'MediaID\'];
 
   switch ($notifyWayName) {
     case "Fall1":     # Der Name muss Identisch sein, zu dem der im Formular hinterlegt wurde
