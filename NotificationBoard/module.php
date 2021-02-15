@@ -67,7 +67,7 @@
         ############################################################################################################################################
         // Minimalaufruf
         public function SendToNotify(
-             string $NotificationFor
+             string $NotificationSubject
             ,string $NotifyType
             ,string $NotifyIcon
             ,string $Message
@@ -77,13 +77,13 @@
           $MailReciever   = "";
           $MediaID        = 0;
 
-          $return = $this->SendToNotifyIntern($NotificationFor , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
+          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
           return $return;
         }
         ############################################################################################################################################
         // Minimalaufruf mit Bildversenden
         public function SendToNotifyImage(
-           string $NotificationFor
+           string $NotificationSubject
           ,string $NotifyType
           ,string $NotifyIcon
           ,string $Message
@@ -93,7 +93,7 @@
           $ExpirationTime = 0;
           $MailReciever   = "";
 
-          $return = $this->SendToNotifyIntern($NotificationFor , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
+          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $MailReciever, $Message, $MediaID, $ExpirationTime);
           return $return;
         }
         ############################################################################################################################################
@@ -101,7 +101,7 @@
         ############################################################################################################################################
         // Interne Funktion zum uebergeben ans RunScript
         private function SendToNotifyIntern(
-             string $NotificationFor
+             string $NotificationSubject
             ,string $NotifyType
             ,string $NotifyIcon
             ,string $MailReciever
@@ -119,14 +119,14 @@
 
           foreach($notificationWays as $notifiWay) {
             // Dummy instanz für Benachrichtigung erstellen z.B: Klingel, Müllabfuhr, ServiceMeldung, Heizung
-            $InstanceNameForIdend = $this->sonderzeichen($NotificationFor);
+            $InstanceNameForIdend = $this->sonderzeichen($NotificationSubject);
             $InstanceNameForIdend = $this->specialCharacters($InstanceNameForIdend);
-            $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationFor);
+            $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationSubject);
             
             // Benachrichitgungsweg-Name
             $notifyWayName = $notifiWay->NotificationWay;
             $notifyWayNameVAR = "Benachrichtigung über... ".$notifyWayName;
-            $notifyWayNameToIdent = $this->sonderzeichen($NotificationFor."_".$notifyWayName);
+            $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
             // Variablen anlegen 
@@ -146,7 +146,7 @@
             // Array for RunScript mit werten die uebergeben wurden
             $RunScriptArray = array(
                 "notifyWayName"     => $notifyWayName,          // Name für swich (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
-                "NotificationFor"   => $NotificationFor,        // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
+                "NotificationSubject"   => $NotificationSubject,        // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
                 "InstanceId"        => $InstanceID,             // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
                 "NotifyType"        => strtolower($NotifyType), // Information / Warnung / Alarm / Aufgabe
                 "Message"           => $Message,                // Nachricht
@@ -195,7 +195,7 @@
             $Script = 
  '<? 
   $notifyWayName    = $_IPS[\'notifyWayName\'];
-  $NotificationFor 	= $_IPS[\'NotificationFor\'];
+  $NotificationSubject 	= $_IPS[\'NotificationSubject\'];
   $InstanceId 	    = $_IPS[\'InstanceId\'];
   $NotifyType       = $_IPS[\'NotifyType\'];
   $Message 		      = $_IPS[\'Message\'];
