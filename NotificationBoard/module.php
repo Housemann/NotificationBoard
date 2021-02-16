@@ -33,6 +33,9 @@
             $RunScriptId = @$this->CreateRunScript ($this->InstanceID, true);
             $this->SetBuffer("b_RunScriptId", $RunScriptId);
 
+            // Vorlage anlegen
+            $this->CreateSendTemplateScript ($this->InstanceID, false);
+
             // Wenn Übernehmen, werden Variablen direkt angelegt
             $this->CreateNewNotifications();
         }
@@ -108,37 +111,19 @@
         ############################################################################################################################################
         ### Funktionen zum uebergabeaufruf des Boards damit Nachrichten an die Kanaele geschickt werden
         ############################################################################################################################################
-        // Minimalaufruf
-        public function SendToNotify(
-           string $NotificationSubject
-          ,string $NotifyType
-          ,string $NotifyIcon
-          ,string $Message
-          ,string $String1
-        )
-        {
-          $ExpirationTime = 0;
-          $Attachment     = "";
-          $String2        = "";
-          $String3        = "";          
-
-          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $Attachment, $ExpirationTime, $String1, $String2, $String3);
-          return $return;
-        }
-        ############################################################################################################################################               
         // Minimalaufruf mit Bildversenden
-        public function SendToNotifyAttachment(
+        public function SendToNotify(
            string $NotificationSubject
           ,string $NotifyType
           ,string $NotifyIcon
           ,string $Message
           ,string $Attachment
           ,string $String1
+          ,string $String2
+          ,string $String3
         )
         {
           $ExpirationTime = 0;
-          $String2        = "";
-          $String3        = "";
 
           $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $Attachment, $ExpirationTime, $String1, $String2, $String3);
           return $return;
@@ -351,6 +336,7 @@
         ############################################################################################################################################
         ############################################################################################################################################
           
+        // AktionsSkript anlegen
         private function CreateActionScript ($ParentID, $hidden=false)
         {
             $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);}?>';
@@ -375,6 +361,7 @@
             return $ID_Aktionsscipt;
         }
 
+        // runScript anlegen
         private function CreateRunScript ($ParentID, $hidden=false)
         {
             $Script = 
@@ -430,6 +417,47 @@
             return $ID_Includescipt;
         }
 
+
+        // VorlageScript anlegen
+        private function CreateSendTemplateScript ($ParentID, $hidden=false)
+        {
+            $Script = 
+ '<? 
+ print_r(
+  STNB_SendToNotify(
+       $instanceid            = '.$this->InstanceID.'
+      ,$NotificationSubject   = "Vorlage"
+      ,$NotifyType            = "alarm"
+      ,$NotifyIcon            = "IPS"
+      ,$Message               = "Das ist eine vorlage"
+      ,$Attachment            = "" ## MedienId oder Pfad
+      ,$String1               = "filebot"
+      ,$String2               = ""
+      ,$String3               = ""
+  ));
+  }';
+
+            $FileName = 'VorlageSendToNotify.ips.php';
+            $ID_Includescipt = @IPS_GetScriptIDByName ( $FileName, $ParentID );
+          
+            if ($ID_Includescipt === false)
+            {
+                $NewScriptID = IPS_CreateScript ( 0 );
+                IPS_SetParent($NewScriptID, $ParentID);
+                IPS_SetName($NewScriptID, $FileName);
+                IPS_SetScriptContent($NewScriptID, $Script);
+                
+                if($hidden == true) {
+                  IPS_SetHidden($NewScriptID,true);
+                }
+
+                $FileName = 'VorlageSendToNotify_'.$NewScriptID.'.ips.php';
+                $Script = IPS_GetScript($NewScriptID);
+                rename(IPS_GetKernelDir().'/scripts/'.$Script['ScriptFile'], IPS_GetKernelDir().'/scripts/'.$FileName);
+                IPS_SetScriptFile($NewScriptID, $FileName);
+            }
+            return $ID_Includescipt;
+        }        
 
 
         private function ReduceGUIDToIdent($guid)
