@@ -1,0 +1,18 @@
+{
+  "translations": {
+      "de": { 
+        "Notification over... ": "Benachrichtigung über... ",
+        "Enable Notifikationways on Create": "Benachrichtigung bei Anlage aktivieren",
+        "NotifyTypes": "Benachrichtigungstypen",
+        "Notificationway": "Benachrichtigungsweg",
+        "Receiver": "Empänger"
+      },
+      "de_DE": {
+        "Notification over... ": "Benachrichtigung über... ",
+        "Enable Notifikationways on Create": "Benachrichtigung bei Anlage aktivieren",
+        "NotifyTypes": "Benachrichtigungstypen",
+        "Notificationway": "Benachrichtigungsweg",
+        "Receiver": "Empänger"        
+      }
+  }
+}

@@ -15,6 +15,9 @@
             // FormularListe
             $this->RegisterPropertyString("notificationWays","");
 
+            // Propertys
+            $this->RegisterPropertyBoolean("notificationWaysEnable",false);
+
             // TestVar für Informationen
             $this->RegisterVariableString("test","test");
             $this->RegisterVariableString("test11","test11");
@@ -84,12 +87,15 @@
               foreach($notificationWays as $notifiWay) {            
                 // Benachrichitgungsweg-Name
                 $notifyWayName = $notifiWay->NotificationWay;
-                $notifyWayNameVAR = "Benachrichtigung über... ".$notifyWayName;
+                $notifyWayNameVAR = $this->translate("Notification over... ").$notifyWayName;
                 $notifyWayNameToIdent = $this->sonderzeichen(IPS_GetName($cId)."_".$notifyWayName);
                 $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
                 // Variablen anlegen 
-                $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
+                $VarId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
+
+                #if($this->ReadPropertyBoolean("notificationWaysEnable") == true)
+                #  SetValue($VarId,true);
               }
             }
           }
@@ -102,27 +108,33 @@
           ,string $NotifyType
           ,string $NotifyIcon
           ,string $Message
+          ,string $String1
         )
         {
           $ExpirationTime = 0;
-          $MediaID        = 0;
+          $Attachment     = "";
+          $String2        = "";
+          $String3        = "";          
 
-          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $MediaID, $ExpirationTime);
+          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $Attachment, $ExpirationTime, $String1, $String2, $String3);
           return $return;
         }
         ############################################################################################################################################               
         // Minimalaufruf mit Bildversenden
-        public function SendToNotifyImage(
+        public function SendToNotifyAttachment(
            string $NotificationSubject
           ,string $NotifyType
           ,string $NotifyIcon
           ,string $Message
-          ,int    $MediaID
+          ,string $Attachment
+          ,string $String1
         )
         {
           $ExpirationTime = 0;
+          $String2        = "";
+          $String3        = "";
 
-          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $MediaID, $ExpirationTime);
+          $return = $this->SendToNotifyIntern($NotificationSubject , $NotifyType, $NotifyIcon, $Message, $Attachment, $ExpirationTime, $String1, $String2, $String3);
           return $return;
         }
         ############################################################################################################################################
@@ -134,8 +146,11 @@
             ,string $NotifyType
             ,string $NotifyIcon
             ,string $Message
-            ,int    $MediaID
+            ,string $Attachment
             ,int  	$ExpirationTime
+            ,string $String1
+            ,string $String2
+            ,string $String3
         )
         {
           // Benachrichtigung auslesen
@@ -160,22 +175,37 @@
             
             // Benachrichitgungsweg-Name
             $notifyWayName = $notifiWay->NotificationWay;
-            $notifyWayNameVAR = "Benachrichtigung über... ".$notifyWayName;
+            $notifyWayNameVAR = $this->translate("Notification over... ").$notifyWayName;
             $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
             // Variablen anlegen 
             $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
             
+            #if($this->ReadPropertyBoolean("notificationWaysEnable") == true)
+            #  SetValue($variableId,true);
+
             // InstanzId aus Formular lesen
             $InstanceID = $notifiWay->instanceID;
 
-            // Receiver holen wenn Receivers leer
+            // Receiver holen
             $Receiver = $notifiWay->Receiver;
 
             // Ablaufdatum setzten wenn nicht übergeben
             if($ExpirationTime == 0 || empty($ExpirationTime) || $ExpirationTime == "")
               $ExpirationTime = 86400;
+
+            // Medienübergabe (wenn Media Exisitert wird id und Pfad zurück gesendet, ansonsten nur der Pfad)
+            if(is_numeric($Attachment) && IPS_MediaExists(intval($Attachment))) {
+              $MediaID = intval($Attachment);
+              
+              $GetMedia = IPS_GetMedia(intval($Attachment));
+              $AttachmentPath = IPS_GetKernelDir().$GetMedia['MediaFile'];
+            } elseif (!is_numeric($Attachment)) {
+              $MediaID = "";
+              $AttachmentPath = $Attachment;
+            }
+
 
             // Array for RunScript mit werten die uebergeben wurden
             $RunScriptArray = array(
@@ -187,7 +217,11 @@
                 "Receiver"              => $Receiver,                 // Empfänger
                 "ExpirationTime"        => $ExpirationTime,           // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
                 "NotifyIcon"            => $NotifyIcon,               // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
-                "MediaID"               => $MediaID                   // ID zum Medien Objekt in IPS
+                "MediaID"               => $MediaID,                  // ID zum Medien Objekt in IPS
+                "AttachmentPath"        => $AttachmentPath,           // Pfad zum Medien / Dateiobjekt
+                "String1"               => $String1,                  // String zur freien verwendung
+                "String2"               => $String2,                  // String zur freien verwendung
+                "String3"               => $String3                   // String zur freien verwendung
                 );
 
 
@@ -239,6 +273,8 @@
   $ExpirationTime       = $_IPS[\'ExpirationTime\'];
   $NotifyIcon           = $_IPS[\'NotifyIcon\'];
   $MediaID              = $_IPS[\'MediaID\'];
+  $AttachmentPath       = $_IPS[\'AttachmentPath\'];
+  $String1              = $_IPS[\'String1\'];
 
   switch ($notifyWayName) {
     case "Fall1":     # Der Name muss Identisch sein, zu dem der im Formular hinterlegt wurde
