@@ -181,9 +181,6 @@
 
             // Variablen anlegen 
             $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
-            
-            #if($this->ReadPropertyBoolean("notificationWaysEnable") == true)
-            #  SetValue($variableId,true);
 
             // InstanzId aus Formular lesen
             $InstanceID = $notifiWay->instanceID;
@@ -275,6 +272,8 @@
   $MediaID              = $_IPS[\'MediaID\'];
   $AttachmentPath       = $_IPS[\'AttachmentPath\'];
   $String1              = $_IPS[\'String1\'];
+  $String2              = $_IPS[\'String2\'];
+  $String3              = $_IPS[\'String3\'];
 
   switch ($notifyWayName) {
     case "Fall1":     # Der Name muss Identisch sein, zu dem der im Formular hinterlegt wurde
