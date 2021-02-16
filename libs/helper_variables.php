@@ -36,6 +36,4 @@ trait STNB_HelperVariables
       }
       return $variableId;
     }
-
-
 }

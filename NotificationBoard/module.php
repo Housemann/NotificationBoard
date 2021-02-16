@@ -19,7 +19,7 @@
             #$this->RegisterPropertyBoolean("notificationWaysEnable",false);
 
             // Var für Informationen der Benachrichtigungswege
-            $this->RegisterVariableString("NotifyWays","NotifyWays");
+            #$this->RegisterVariableString("NotifyWays","NotifyWays");
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -273,7 +273,7 @@
           $VarIdRunScript = $this->GetBuffer("b_RunScriptId");
 
           // Variable mit Inhalt was gesendet wurde als Hilfe
-          $this->SetValue("NotifyWays",json_encode($notificationWays));
+          #$this->SetValue("NotifyWays",json_encode($notificationWays));
           
           // Array für Rückgabe der Benachrichtigungen
           $SenderArray = array();
@@ -360,11 +360,17 @@
             {
                 $NewScriptID = IPS_CreateScript ( 0 );
                 IPS_SetParent($NewScriptID, $ParentID);
-                IPS_SetName($NewScriptID, "Aktionsskript");
+                #IPS_SetName($NewScriptID, "Aktionsskript");
                 IPS_SetScriptContent($NewScriptID, $Script);
                 if($hidden == true) {
                   IPS_SetHidden($NewScriptID,true);
                 }
+                
+                $ScriptName = 'Aktionsskript_'.$NewScriptID;
+                $Script = IPS_GetScript($NewScriptID);
+                rename(IPS_GetKernelDir().'/scripts/'.$Script['ScriptFile'], IPS_GetKernelDir().'/scripts/'.$ScriptName);
+                IPS_SetScriptFile($NewScriptID, $ScriptName);
+                IPS_SetName($NewScriptID, substr($ScriptName, 0, -6));
             }
             return $ID_Aktionsscipt;
         }
@@ -387,20 +393,22 @@
   $String2              = $_IPS[\'String2\'];
   $String3              = $_IPS[\'String3\'];
 
+  $IdNotifyBoard        = '.$this->InstanceID.';
+
   ### Der Name im CASE muss Identisch zu dem im Konfigurationsformular sein, damit ein Mapping stattfindet
   switch ($notifyWayName) {
     case "E-Mail":
-      STNB_SendMail('.$this->InstanceID.', $InstanceId, $Receiver, $NotificationSubject, $Message, $MediaID, $AttachmentPath);
+      STNB_SendMail($IdNotifyBoard, $InstanceId, $Receiver, $NotificationSubject, $Message, $MediaID, $AttachmentPath);
       break;
     case "WebFront PopUp":
-      STNB_WF_SendPopup('.$this->InstanceID.', $InstanceId, $NotificationSubject, $Message);
+      STNB_WF_SendPopup($IdNotifyBoard, $InstanceId, $NotificationSubject, $Message);
       break;
     case "WebFront SendNotification":
-      STNB_WF_SendNotification('.$this->InstanceID.', $InstanceId, $NotificationSubject, $Message, $NotifyIcon, $TimeOut=4);
+      STNB_WF_SendNotification($IdNotifyBoard, $InstanceId, $NotificationSubject, $Message, $NotifyIcon, $TimeOut=4);
       break;
   }';
-            $FileName = "run_NotifyBoard.ips.php";
             
+            $FileName = 'run_NotifyBoard.ips.php';
             $ID_Includescipt = @IPS_GetScriptIDByName ( $FileName, $ParentID );
           
             if ($ID_Includescipt === false)
@@ -413,6 +421,11 @@
                 if($hidden == true) {
                   IPS_SetHidden($NewScriptID,true);
                 }
+
+                $FileName = 'run_NotifyBoard_'.$NewScriptID.'.ips.php';
+                $Script = IPS_GetScript($NewScriptID);
+                rename(IPS_GetKernelDir().'/scripts/'.$Script['ScriptFile'], IPS_GetKernelDir().'/scripts/'.$FileName);
+                IPS_SetScriptFile($NewScriptID, $FileName);
             }
             return $ID_Includescipt;
         }
