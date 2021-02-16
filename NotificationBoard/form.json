@@ -42,11 +42,6 @@
        ],
        "values": [
        ]
-    },
-    {
-      "type": "CheckBox",
-      "name": "notificationWaysEnable", 
-      "caption": "Enable Notifikationways on Create"
     }
   ]
 }

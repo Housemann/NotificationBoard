@@ -15,13 +15,11 @@
             // FormularListe
             $this->RegisterPropertyString("notificationWays","");
 
-            // Propertys
-            $this->RegisterPropertyBoolean("notificationWaysEnable",false);
+            #// Propertys
+            #$this->RegisterPropertyBoolean("notificationWaysEnable",false);
 
-            // TestVar für Informationen
-            $this->RegisterVariableString("test","test");
-            $this->RegisterVariableString("test11","test11");
-
+            // Var für Informationen der Benachrichtigungswege
+            $this->RegisterVariableString("NotifyWays","NotifyWays");
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -35,12 +33,8 @@
             $RunScriptId = @$this->CreateRunScript ($this->InstanceID, true);
             $this->SetBuffer("b_RunScriptId", $RunScriptId);
 
-            // 
+            // Wenn Übernehmen, werden Variablen direkt angelegt
             $this->CreateNewNotifications();
-
-
-            #$this->SendToNotify("Klingel", "test");
-            #$this->RegisterVariableString("test","test");
         }
  
         
@@ -52,10 +46,20 @@
           //Only add default element if we do not have anything in persistence
           if($this->ReadPropertyString("notificationWays") == "") {			
             $data->elements[0]->values[] = Array(
-              "instanceID"      => 12435,
-              "NotificationWay" => "Test",
-              "Receiver"        => "test@test.de"
+              "instanceID"      => IPS_GetInstanceListByModuleID ("{375EAF21-35EF-4BC4-83B3-C780FD8BD88A}")[0],
+              "NotificationWay" => "E-Mail",
+              "Receiver"        => "deine@mail.de"
             );
+            $data->elements[0]->values[] = Array(
+              "instanceID"      => IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
+              "NotificationWay" => "WebFront SendNotification",
+              "Receiver"        => ""
+            );    
+            $data->elements[0]->values[] = Array(
+              "instanceID"      => IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
+              "NotificationWay" => "WebFront PopUp",
+              "Receiver"        => ""
+            );                      
           } else {
             //Annotate existing elements
             $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
@@ -102,6 +106,8 @@
         }
 
         ############################################################################################################################################
+        ### Funktionen zum uebergabeaufruf des Boards damit Nachrichten an die Kanaele geschickt werden
+        ############################################################################################################################################
         // Minimalaufruf
         public function SendToNotify(
            string $NotificationSubject
@@ -140,6 +146,112 @@
         ############################################################################################################################################
         ############################################################################################################################################
         ############################################################################################################################################
+        ### Standart Funktionen zum senden....
+        ############################################################################################################################################
+        // Zum versenden einer Mail mit MediaId oder Pfad einer Datei
+        public function SendMail(
+            int    $ModuleIdMail, 
+            string $Receivers, 
+            string $NotificationSubject, 
+            string $Message, 
+            string $MediaID="0", 
+            string $AttachmentPath=""
+        ) 
+        {
+          // Empänger in Array umwandeln wenn mehrere uebergeben wurden
+          $Receivers = explode(";", str_replace(" ", "",$Receivers));
+
+          // empaenger durchgehen
+          foreach($Receivers as $Receiver) {
+            
+            // Log Message zusammenbauen
+            $LogMessage = "ModuleIdMail: $ModuleIdMail\nReceiver: $Receiver\nNotificationSubject: $NotificationSubject\nMessage: $Message\nMediaID: $MediaID\nAttachmentPath: $AttachmentPath";
+
+            if($Receiver !== "") {
+              if($MediaID==0 && $AttachmentPath=="") {
+                $Status = SMTP_SendMailEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message);
+
+                if($Status==false) {
+                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
+                } else {
+                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
+                }
+              } elseif($MediaID>0 && $AttachmentPath!=="") {
+                if(IPS_MediaExists($MediaID)) {
+                  $Status = SMTP_SendMailMediaEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $MediaID);
+
+                  if($Status==false) {
+                    $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
+                  } else {
+                    $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
+                  }
+                } else {
+                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Sender der Mail, MediaID: $MediaID existiert nicht!\n".$LogMessage, KL_NOTIFY);
+                }
+              } elseif($MediaID=="" && $AttachmentPath!=="") {
+                $Status = SMTP_SendMailAttachmentEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
+
+                if($Status==false) {
+                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
+                } else {
+                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
+                }
+              }
+            } else {
+              $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Es wurden keine Empänger hinterlegt.\n".$LogMessage, KL_ERROR);
+            }
+          }          
+        }
+        ############################################################################################################################################
+        // Zum öffnen eines PupUps im Webfront
+        public function WF_SendPopup(
+            int    $ModuleIdWebFront, 
+            string $Title, 
+            string $Message
+        ) 
+        {
+          $Status = WFC_SendPopup($ModuleIdWebFront, $Title, $Message);
+          
+          // Log Message zusammenbauen
+          $LogMessage = "ModuleIdWebFront: $ModuleIdWebFront\nNotificationSubject: $Title\nMessage: $Message\n";
+
+          if($Status==false) {
+            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden and Webfront.\n".$LogMessage, KL_ERROR);
+          } else {
+            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Nachricht erfolgreich ans Webfront gesendet.\n".$LogMessage, KL_NOTIFY);
+          }    
+        }
+        ############################################################################################################################################
+        // Zum Senden einer Nachricht ans Webfront
+        public function WF_SendNotification(
+            int    $ModuleIdWebFront, 
+            string $Title, 
+            string $Message, 
+            string $NotifyIcon, 
+            int    $TimeOut
+        ) 
+        { 
+          $Status = WFC_SendNotification($ModuleIdWebFront, $Title, $Message, $NotifyIcon, $TimeOut);
+        
+          // Log Message zusammenbauen
+          $LogMessage = "ModuleIdWebFront: $ModuleIdWebFront\nNotificationSubject: $Title\nMessage: $Message\nIcon: $NotifyIcon\nTimeOut: $TimeOut";
+
+          if($Status==false) {
+            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden and Webfront.\n".$LogMessage, KL_ERROR);
+          } else {
+            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Nachricht erfolgreich ans Webfront gesendet.\n".$LogMessage, KL_NOTIFY);
+          }    
+        }
+        ############################################################################################################################################
+
+
+
+
+
+
+        ############################################################################################################################################
+        ############################################################################################################################################
+        ############################################################################################################################################
         // Interne Funktion zum uebergeben ans RunScript
         private function SendToNotifyIntern(
              string $NotificationSubject
@@ -161,7 +273,7 @@
           $VarIdRunScript = $this->GetBuffer("b_RunScriptId");
 
           // Variable mit Inhalt was gesendet wurde als Hilfe
-          $this->SetValue("test",json_encode($notificationWays));
+          $this->SetValue("NotifyWays",json_encode($notificationWays));
           
           // Array für Rückgabe der Benachrichtigungen
           $SenderArray = array();
@@ -275,10 +387,17 @@
   $String2              = $_IPS[\'String2\'];
   $String3              = $_IPS[\'String3\'];
 
+  ### Der Name im CASE muss Identisch zu dem im Konfigurationsformular sein, damit ein Mapping stattfindet
   switch ($notifyWayName) {
-    case "Fall1":     # Der Name muss Identisch sein, zu dem der im Formular hinterlegt wurde
-       echo "Deine Benachrichtigung";
-       break;
+    case "E-Mail":
+      STNB_SendMail('.$this->InstanceID.', $InstanceId, $Receiver, $NotificationSubject, $Message, $MediaID, $AttachmentPath);
+      break;
+    case "WebFront PopUp":
+      STNB_WF_SendPopup('.$this->InstanceID.', $InstanceId, $NotificationSubject, $Message);
+      break;
+    case "WebFront SendNotification":
+      STNB_WF_SendNotification('.$this->InstanceID.', $InstanceId, $NotificationSubject, $Message, $NotifyIcon, $TimeOut=4);
+      break;
   }';
             $FileName = "run_NotifyBoard.ips.php";
             
