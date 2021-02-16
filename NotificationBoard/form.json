@@ -4,7 +4,7 @@
        "type": "List",
        "name": "notificationWays",
        "caption": "NotifyTypes",
-       "rowCount": 5,
+       "rowCount": 10,
        "add": true,
        "delete": true,
        "sort": {
@@ -15,7 +15,7 @@
          {
             "label": "InstanceID",
             "name": "instanceID", 
-            "width": "350px",
+            "width": "400px",
             "add": 0,
             "edit": {
                "type": "SelectInstance"
@@ -24,7 +24,16 @@
          {
             "label": "Notificationway",
             "name": "NotificationWay", 
-            "width": "700px",
+            "width": "300px",
+            "add": 0,
+            "edit": {
+               "type": "ValidationTextBox"
+            }
+          },
+          {
+            "label": "Receiver",
+            "name": "Receiver", 
+            "width": "800px",
             "add": 0,
             "edit": {
                "type": "ValidationTextBox"
@@ -33,12 +42,6 @@
        ],
        "values": [
        ]
-    },
-    {
-      "type": "ValidationTextBox", 
-      "name": "email", 
-      "caption": "E-Mail Adresses",
-      "width": "1140px"
     }
   ]
 }
