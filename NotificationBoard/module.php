@@ -1,12 +1,14 @@
 <?php
 
     require_once __DIR__ . '/../libs/helper_variables.php';
+    require_once __DIR__ . '/../libs/helper_hook.php';
 
     // Klassendefinition
     class NotificationBoard extends IPSModule {
 
         use STNB_HelperVariables;
- 
+        use STNB_HelperHook;
+
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() {
             // Diese Zeile nicht löschen.
@@ -36,8 +38,18 @@
             // Vorlage anlegen
             $this->CreateSendTemplateScript ($this->InstanceID, false);
 
+            // Übersicht in Html darstellen und anlegen
+            $InzId = $this->CreateHtmlBox($ActionsScriptId);
+            $this->SetBuffer("b_VarIdInstance", $InzId);
+
+            // VariablenProfil aktualisieren
+            $this->CreateVariableProfile($InzId, $this->InstanceID);
+
             // Wenn Übernehmen, werden Variablen direkt angelegt
             $this->CreateNewNotifications();
+
+            // WebHook generieren
+            $this->RegisterHook('/hook/' . $this->hook);
         }
  
         
@@ -227,15 +239,7 @@
             $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Nachricht erfolgreich ans Webfront gesendet.\n".$LogMessage, KL_NOTIFY);
           }    
         }
-        ############################################################################################################################################
-
-
-
-
-
-
-        ############################################################################################################################################
-        ############################################################################################################################################
+        ############################################################################################################################################ 
         ############################################################################################################################################
         // Interne Funktion zum uebergeben ans RunScript
         private function SendToNotifyIntern(
@@ -276,8 +280,15 @@
             $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
-            // Variablen anlegen 
-            $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
+            // Variablen anlegen
+            $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
+            if($variableId===false) {
+              $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
+              
+              // Variablenprofil aktualisieren
+              $InzId = $this->GetBuffer("b_VarIdInstance");
+              $this->CreateVariableProfile($InzId, $this->InstanceID);
+            }
 
             // InstanzId aus Formular lesen
             $InstanceID = $notifiWay->instanceID;
@@ -489,4 +500,137 @@
             }
             return $iid;
         }
+
+        private function CreateHtmlBox(int $ActionScriptId) 
+        {
+          $CatName = "Html Overview";
+          if(@IPS_GetCategoryIDByName($CatName,$this->InstanceID)==false) {
+            $CatID = IPS_CreateCategory();
+            IPS_SetName($CatID, $this->translate("Html Overview"));
+            IPS_SetParent($CatID, $this->InstanceID);
+            
+            // Variablen anlegen
+            $InzID = $this->CreateVariable("Instance", "Instance", 1, $CatID, 0, "", $ActionScriptId);
+            $this->CreateVariable("HtmlOverview", "HtmlOverview", 3, $CatID, 1, "~HTMLBox", $ActionScriptId);
+            
+            // Variabelen Profil füllen mit DummyInstanzen
+            $this->CreateVariableProfile($InzID, $this->InstanceID);
+          } else {
+            $CatID = @IPS_GetCategoryIDByName($CatName,$this->InstanceID);
+            $InzID = @IPS_GetVariableIDByName ("Instance", $CatID);
+          }
+          return $InzID;
+        }
+
+        private function CreateVariableProfile(int $InzID, int $DummyID)	 
+        {	
+          $profilename = 'NotificationInstanzen';
+
+          if (IPS_VariableProfileExists($profilename) === false) {
+            IPS_CreateVariableProfile($profilename, 1);
+          }
+
+          #Assoziationen immer vorher leeren
+          $GetVarProfile = IPS_GetVariableProfile ( $profilename );
+          foreach($GetVarProfile['Associations'] as $assi ) {
+            @IPS_SetVariableProfileAssociation ($profilename, $assi['Value'], "", "", 0 );
+          }
+
+          $ChildIds = IPS_GetChildrenIDs($DummyID);
+          $ArrayInstanzIDs = array();
+          foreach($ChildIds as $Ids) {
+            if(IPS_InstanceExists($Ids) == TRUE) { #Prüfen ob Instanz existiert
+              $InstanceIds = IPS_GetInstance($Ids);		
+              if($InstanceIds['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist	
+                $ArrayInstanzIDs[] = array (
+                    "name"  => IPS_GetName($InstanceIds['InstanceID']),
+                    "id"    => $InstanceIds['InstanceID']
+                );
+              }
+            }
+          }
+          asort($ArrayInstanzIDs);
+            
+          $i = 0;
+          $NewArray = array();
+          foreach($ArrayInstanzIDs as $key) {
+            $name = $key['name'];
+            $id = $key['id'];
+            $NewArray[] = array(
+                  "key"   => $i+1, 
+                  "id"    => $id, 
+                  "name"  => $name
+            );
+            $i++;
+          }
+          
+          // Assoziationen füllen
+          foreach($NewArray as $key) {
+            IPS_SetVariableProfileAssociation($profilename, $key['key'], $key['name'], "", 0 );
+          }
+
+          IPS_SetVariableCustomProfile ($InzID, $profilename);
+          
+          return $NewArray;
+        }
+
+        private function FillHtmlBox($Id) 
+        {
+          // Mit der Id den Baum durchgehen und das passende Dummy holen und in die HtmlBox schreiben
+
+          // Etwas CSS und HTML
+          $style = "";
+          $style = $style.'<style type="text/css">';
+          $style = $style.'table.test { width: 100%; border-collapse: true;}';
+          $style = $style.'Test { border: 2px solid #444455; }';
+          $style = $style.'td.lst { width: 120px; text-align:center; padding: 2px;  border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
+          $style = $style.'.blue { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(0, 0, 255); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.red { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 0, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.green { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(0, 255, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.yellow { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 255, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.orange { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 160, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'</style>';
+
+
+          $s = '';	
+          $s = $s . $style;
+
+          //Tabelle Erstellen
+          $s = $s . '<table class=\'test\'>'; 
+
+          $s = $s . '<tr>'; 
+          #$s = $s . '<td style=\'background: #121212;font-size:12;padding: 5px;\' colspan=\'3\'><B>'.IPS_GetName($InstanceIds['InstanceID']).'</td>';
+          #$s = $s . '</tr>'; 
+
+          #$EID = array(); # Neue EventIDs Sammeln zum vergleich, dass die alten gelöscht werden können.
+          foreach($ArrayVarChildIds as $CIDs)
+          {
+              $ID = IPS_GetObjectIDByName($CIDs,$ValueInstanzID);
+              #$EID[] = @CreateEvent ("$ID.$CIDs", $ID);
+              
+              IPS_Sleep(100);
+              
+              $class = '';
+              $toggle = '';
+              $aktWert = GetValue($ID);
+              if ($aktWert === true) {
+                  $class = 'green';
+                  $toggle = 'Senden';
+                  
+              } else {
+                  $class = 'red';
+                  $toggle = 'Nicht senden';
+              }	
+              
+              $s = $s . '<td style=\'text-align:left;font-size:11;border-bottom:0.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.$CIDs.'</td>';
+              $s = $s . '<td style=\'border-bottom:0.0px outset;border-top:0.0px outset\' class=\'lst\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/setnotify?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';			
+              $s = $s . '</tr>';
+          }
+
+          // HTML Box füllen
+          $CatIdHtmlBox = @IPS_GetCategoryIDByName("Html Overview",$this->InstanceID);
+          $HtmlBox = @IPS_GetVariableIDByName("HtmlOverview", $CatIdHtmlBox);
+          SetValue($HtmlBox, $s);
+        }
+
     }
