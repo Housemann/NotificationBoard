@@ -41,19 +41,48 @@
             // Diese Zeile nicht löschen
             parent::ApplyChanges();
 
+
             // Variablen
-            #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+            if($this->ReadPropertyBoolean("CreateNotifyTypes")==true) {
+              // Variable Notify Typen anlegen
               $this->RegisterVariableInteger("NotifyTypes", $this->translate("Notify Types"), "", -3);
               $this->EnableAction ("NotifyTypes");
+            } else {
+              @$this->UnregisterVariable("NotifyTypes");
+            }
+                  
+            // Html Box anlegen
+            if($this->ReadPropertyBoolean("CreateHtmlBox")==true) {
+              $this->RegisterVariableString("NotifyWays", $this->translate("Notify Ways"), "~HTMLBox", -2);
+            } else {
+              @$this->UnregisterVariable("NotifyWays");
+            }
+
+              // PopUp Instanz erstellen
+              if($this->ReadPropertyBoolean("CreatePopUpModul")==true) {
+                $this->CreatePopUpByIdent($this->InstanceID, "PopUpNotifyWays", $this->translate("Notify..."), -1);
+              } 
+              
+                #elseif($rc==1) {
+                #$iid = IPS_GetInstanceIDByName($this->translate("Notify Ways"),$this->InstanceID);
+                #$LinkID = IPS_GetChildrenIDs($iid);
+                #IPS_DeleteLink ($LinkID[0]);
+                #IPS_DeleteInstance($iid);
+              #}
+
+              #} else {
+                #$iid = IPS_GetInstanceIDByName($this->InstanceID,$this->translate("Notify Ways"));
+                #IPS_DeleteInstance($iid);
+              #}
             #} else {
-            #  $this->UnregisterVariable("NotifyTypes");
+            #  @$this->UnregisterVariable("NotifyTypes");
+            #  @$this->UnregisterVariable("NotifyWays");
+
+              #$iid = IPS_GetInstanceIDByName($this->InstanceID,$this->translate("Notify Ways"));
+              #IPS_DeleteInstance($iid);
             #}
             
-            #if($this->ReadPropertyBoolean("CreateHtmlBox")===true) {
-              $this->RegisterVariableString("NotifyWays", $this->translate("Notify Ways"), "~HTMLBox", -2);
-            #} else {
-            #  $this->UnregisterVariable("NotifyWays");
-            #}
+           
 
 
             // Unsichtbar schalten über Checkbox
@@ -68,9 +97,7 @@
             #  IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),false);
             #}
 
-            // PopUp Instanz erstellen
-            #if($this->ReadPropertyBoolean("HtmlVisible")===true) {
-            $this->CreatePopUpByIdent($this->InstanceID, "PopUpNotifyWays", $this->translate("Notify Ways"), -1);
+           
 
             // Sichtbarkeit Instanzen ändern
             $this->ChangeVisibility($this->ReadPropertyBoolean("InstanceVisible"));
@@ -80,7 +107,9 @@
             $this->CreateRunScript ($this->InstanceID, true);
 
             // VariablenProfil aktualisieren
+            #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
             $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+            #}
 
             // Wenn Übernehmen, werden Variablen direkt angelegt
             $this->CreateNewNotifications();
@@ -189,8 +218,10 @@
           switch($Ident) {
               case "NotifyTypes":
                 SetValue($this->GetIDForIdent($Ident), $Value);
-                $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
-                $this->FillHtmlBox();
+                #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+                  $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+                  $this->FillHtmlBox();
+                #}
                   break;
               default:
                   throw new Exception("Invalid Ident");
@@ -352,7 +383,7 @@
             $InstanceNameForIdend = $this->sonderzeichen($NotificationSubject);
             $InstanceNameForIdend = $this->specialCharacters($InstanceNameForIdend);
             
-            $dummyId = @IPS_GetObjectIDByName($NotificationSubject, $this->InstanceID); 
+            $dummyId = @IPS_GetObjectIDByName($NotificationSubject, $this->InstanceID);
             if($dummyId==false) {
               $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationSubject);
               $ChkCreateDid = 1;
@@ -367,13 +398,18 @@
             $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
-            // Variablen anlegen
-            $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
-            if($variableId===false) {
-              $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
-              
-              // Variablenprofil aktualisieren
-              $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+            // Variablen anlegen wenn es dummy Modul ist
+            $InstanceIdDummy = IPS_GetInstance($dummyId);
+            if($InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
+              $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
+              if($variableId===false) {
+                $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "~Switch", $VarIdActionsScript);
+                
+                // Variablenprofil aktualisieren
+                #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+                  $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+                #}
+              }
             }
 
             // InstanzId aus Formular lesen
@@ -427,8 +463,11 @@
               array_push($SenderArray,$ArrayMerge);
             }
           }
-          if($ChkCreateDid==1) 
-            $this->FillHtmlBox();
+          if($ChkCreateDid==1) { 
+            if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+              $this->FillHtmlBox();
+            }
+          }
 
           return $SenderArray;
         }
@@ -458,13 +497,18 @@
                 $notifyWayNameToIdent = $this->sonderzeichen(IPS_GetName($cId)."_".$notifyWayName);
                 $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
-                // Variablen anlegen 
-                $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
+                // Variablen anlegen wenn ein Dummy Modul
+                $InstanceIdDummy = IPS_GetInstance($cId);
+                if($InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
+                  $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
+                }
               }
             }
           }
           // HTML Box aktualieren
-          $this->FillHtmlBox();
+          #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+            $this->FillHtmlBox();
+          #}
         }
         
         ############################################################################################################################################
@@ -497,14 +541,16 @@
                 IPS_SetIdent($iid, $ident);
 
                 // Variablenprofil aktualisieren
-                $Array = $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
-                
-                // für Dummyname ID im Variablenprofil holen und Instanz "NotifyTypes" damit setzten und HTML Box neu laden
-                foreach($Array as $key) {
-                  if($key['name']==$name) {
-                    $this->SetValue("NotifyTypes",$key['key']);
+                #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+                  $Array = $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+                  
+                  // für Dummyname ID im Variablenprofil holen und Instanz "NotifyTypes" damit setzten und HTML Box neu laden
+                  foreach($Array as $key) {
+                    if($key['name']==$name) {
+                      $this->SetValue("NotifyTypes",$key['key']);
+                    }
                   }
-                }
+                #}
             }
             return $iid;
         }
@@ -661,8 +707,8 @@
           }
 
           // HTML Box füllen
-          #if($this->ReadPropertyBoolean("CreateHtmlBox")===true)
-            $this->SetValue("NotifyWays", $s);
+          if(IPS_ObjectExists(@IPS_GetObjectIDByName($this->translate("Notify Ways"),$this->InstanceID)))
+            @$this->SetValue("NotifyWays", $s);
         }
 
     }
