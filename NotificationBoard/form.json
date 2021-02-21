@@ -44,6 +44,26 @@
        ]
     },
     {
+      "type": "Label",
+      "caption": "If CheckBox are TRUE, Instances and/or HTML Box is not Visible for WebFront"
+    },
+    {
+      "type": "CheckBox",
+      "name": "InstanceVisible", 
+      "caption": "Notification Instances not Visible"
+    },
+    {
+      "type": "CheckBox",
+      "name": "HtmlVisible", 
+      "caption": "Html Box not Visible"
+    },
+    {
+      "type": "Label"
+    },
+    {
+      "type": "Label"
+    },
+    {
        "type": "Label",
        "caption": "WebHook Control" 
     },

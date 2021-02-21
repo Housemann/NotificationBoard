@@ -19,18 +19,16 @@
             // FormularListe
             $this->RegisterPropertyString("notificationWays","");
 
-            // Attributes 
-            $this->RegisterAttributeInteger("a_ActionsScriptId",0);
-            $this->RegisterAttributeInteger("a_RunScriptId",0);
-
-            #// Propertys
+            // Propertys
             $this->RegisterPropertyString('Username', '');
             $this->RegisterPropertyString('Password', '');
+            $this->RegisterPropertyBoolean("InstanceVisible",false);
+            $this->RegisterPropertyBoolean("HtmlVisible",false);
 
             // Variablen
-            $this->RegisterVariableInteger("NotifyTypes", "Notify Types", "", -2);
-            $this->EnableAction ("NotifyTypes");
-            $this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
+            #$this->RegisterVariableInteger("NotifyTypes", "Notify Types", "", -2);
+            #$this->EnableAction ("NotifyTypes");
+            #$this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
 
             // Vorlage anlegen
             $this->CreateSendTemplateScript ($this->InstanceID, false);
@@ -41,11 +39,25 @@
             // Diese Zeile nicht löschen
             parent::ApplyChanges();
 
-            $ActionsScriptId = @$this->CreateActionScript ($this->InstanceID, true);
-            $this->WriteAttributeInteger("a_ActionsScriptId",$ActionsScriptId);
-            
-            $RunScriptId = @$this->CreateRunScript ($this->InstanceID, true);
-            $this->WriteAttributeInteger("a_RunScriptId",$RunScriptId);
+            // Variablen
+            $this->RegisterVariableInteger("NotifyTypes", "Notify Types", "", -2);
+            $this->EnableAction ("NotifyTypes");
+            $this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
+
+            if($this->ReadPropertyBoolean("HtmlVisible")===true) {
+              IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),true);
+              IPS_SetHidden($this->GetIDForIdent("NotifyWays"),true);
+            } else {
+              IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),false);
+              IPS_SetHidden($this->GetIDForIdent("NotifyWays"),false);
+            }
+
+            // Sichtbarkeit Instanzen ändern
+            $this->ChangeVisibility($this->ReadPropertyBoolean("InstanceVisible"));
+
+            // Scripte anlegen
+            $this->CreateActionScript ($this->InstanceID, true);
+            $this->CreateRunScript ($this->InstanceID, true);
 
             // VariablenProfil aktualisieren
             $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
@@ -54,7 +66,7 @@
             $this->CreateNewNotifications();
 
             // WebHook generieren
-            $this->RegisterHook('/hook/' . $this->hook);
+            $this->RegisterHook('/hook/'.$this->hook);
         }
  
 
@@ -146,7 +158,6 @@
                     $aktwert = GetValue($id);
                     SetValue($id, !$aktwert);
                     $this->FillHtmlBox();
-                    IPS_LogMessage("WebHook GET", print_r($_GET, true));
                     break;
                 }	  
             }
@@ -158,6 +169,7 @@
           switch($Ident) {
               case "NotifyTypes":
                 SetValue($this->GetIDForIdent($Ident), $Value);
+                $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
                 $this->FillHtmlBox();
                   break;
               default:
@@ -305,18 +317,29 @@
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
           
           // Script Ids holen
-          $VarIdActionsScript = $this->ReadAttributeInteger("a_ActionsScriptId");
-          $VarIdRunScript = $this->ReadAttributeInteger("a_RunScriptId");
-          
+          $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
+          $VarIdRunScript = IPS_GetObjectIDByName("run_NotifyBoard",$this->InstanceID);
+
           // Array für Rückgabe der Benachrichtigungen
           $SenderArray = array();
+
+          // hilfsVar ob Dummy neu ist
+          $ChkCreateDid = 0;
 
           // Benachrichtigungen im Formular durch gehen
           foreach($notificationWays as $notifiWay) {
             // Dummy instanz für Benachrichtigung erstellen z.B: Klingel, Müllabfuhr, ServiceMeldung, Heizung
             $InstanceNameForIdend = $this->sonderzeichen($NotificationSubject);
             $InstanceNameForIdend = $this->specialCharacters($InstanceNameForIdend);
-            $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationSubject);
+            
+            $dummyId = @IPS_GetObjectIDByName($NotificationSubject, $this->InstanceID); 
+            if($dummyId==false) {
+              $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationSubject);
+              $ChkCreateDid = 1;
+            }
+            
+            // if true dummyInstance is visible
+            IPS_SetHidden ($dummyId, $this->ReadPropertyBoolean("InstanceVisible"));
             
             // Benachrichitgungsweg-Name
             $notifyWayName = $notifiWay->NotificationWay;
@@ -384,6 +407,9 @@
               array_push($SenderArray,$ArrayMerge);
             }
           }
+          if($ChkCreateDid==1) 
+            $this->FillHtmlBox();
+
           return $SenderArray;
         }
         ############################################################################################################################################
@@ -397,10 +423,8 @@
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
           
           // Script Ids holen
-          #$VarIdActionsScript = $this->GetBuffer("b_ActionsScriptId");
-          #$VarIdRunScript = $this->GetBuffer("b_RunScriptId");
-          $VarIdActionsScript = $this->ReadAttributeInteger("a_ActionsScriptId");
-          $VarIdRunScript = $this->ReadAttributeInteger("a_RunScriptId");
+          $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
+          $VarIdRunScript = IPS_GetObjectIDByName("run_NotifyBoard",$this->InstanceID);
 
           // ChildrenIds (Subjects) vom Modul durchgehen
           foreach(IPS_GetChildrenIDs($this->InstanceID) as $cId) {
@@ -415,13 +439,12 @@
                 $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
                 // Variablen anlegen 
-                $VarId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
-
-                #if($this->ReadPropertyBoolean("notificationWaysEnable") == true)
-                #  SetValue($VarId,true);
+                $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "~Switch", $VarIdActionsScript);
               }
             }
           }
+          // HTML Box aktualieren
+          $this->FillHtmlBox();
         }
         
         ############################################################################################################################################
@@ -454,9 +477,30 @@
                 IPS_SetIdent($iid, $ident);
 
                 // Variablenprofil aktualisieren
-                $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+                $Array = $this->CreateVariableProfile($this->GetIDForIdent("NotifyTypes"), $this->InstanceID);
+                
+                // für Dummyname ID im Variablenprofil holen und Instanz "NotifyTypes" damit setzten und HTML Box neu laden
+                foreach($Array as $key) {
+                  if($key['name']==$name) {
+                    $this->SetValue("NotifyTypes",$key['key']);
+                  }
+                }
             }
             return $iid;
+        }
+
+        private function ChangeVisibility(bool $Value) 
+        {
+          $ChildIds = IPS_GetChildrenIDs($this->InstanceID);
+          $ArrayVarChildIds = array();
+          foreach($ChildIds as $Ids) {
+            if(IPS_InstanceExists($Ids) == TRUE) { #Prüfen ob Instanz existiert
+              $InstanceIds = IPS_GetInstance($Ids);		
+              if($InstanceIds['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist	
+                IPS_SetHidden($InstanceIds['InstanceID'],$Value);
+              }
+            }
+          }
         }
 
         // Variablenprofil NotificationInstanzen erstellen
@@ -508,15 +552,17 @@
           }
 
           @IPS_SetVariableCustomProfile ($VarId, $profilename);
+
+          return $NewArray;
         }
 
 
         // HTML Box füllen
-        private function FillHtmlBox() 
+        public function FillHtmlBox() 
         {
           // Mit der Id den Baum durchgehen und das passende Dummy holen und in die HtmlBox schreiben
           $ValueFormattedFromNotifyTypes = GetValueFormatted($this->GetIDForIdent("NotifyTypes"));
-          $ValueInstanzID = IPS_GetObjectIDByName($ValueFormattedFromNotifyTypes,$this->InstanceID);;
+          $ValueInstanzID = @IPS_GetObjectIDByName($ValueFormattedFromNotifyTypes,$this->InstanceID);;
           $ChildIds = IPS_GetChildrenIDs($this->InstanceID);
           $ArrayVarChildIds = array();
           foreach($ChildIds as $Ids) {
@@ -528,13 +574,14 @@
                               $VarIDs = IPS_GetChildrenIDs($InstanceIds['InstanceID']);
                               foreach($VarIDs as $IDs) {
                                   $ArrayVarChildIds[] = IPS_GetName($IDs);
-                                  asort($ArrayVarChildIds);
+                                  #asort($ArrayVarChildIds);
                               }
                           break;
                       }
                   }
               }
           }
+          sort($ArrayVarChildIds);
           
           // Etwas CSS und HTML
           $style = "";
@@ -559,7 +606,6 @@
           #$s = $s . '<td style=\'background: #121212;font-size:12;padding: 5px;\' colspan=\'3\'><B>'.IPS_GetName($InstanceIds['InstanceID']).'</td>';
           #$s = $s . '</tr>'; 
 
-          #$EID = array(); # Neue EventIDs Sammeln zum vergleich, dass die alten gelöscht werden können.
           foreach($ArrayVarChildIds as $CIDs)
           {
               $ID = IPS_GetObjectIDByName($CIDs,$ValueInstanzID);

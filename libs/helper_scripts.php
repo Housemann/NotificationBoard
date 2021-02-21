@@ -6,7 +6,7 @@ trait STNB_HelperScripts
     // AktionsSkript anlegen
     private function CreateActionScript ($ParentID, $hidden=false)
     {
-        $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);}?>';
+        $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);STNB_FillHtmlBox('.$this->InstanceID.');}?>';
         $ID_Aktionsscipt = @IPS_GetScriptIDByName ( "Aktionsskript", $ParentID );
 
         if ($ID_Aktionsscipt === false)
@@ -63,14 +63,14 @@ trait STNB_HelperScripts
       break;
   }';
             
-      $FileName = 'run_NotifyBoard.ips.php';
+      $FileName = 'run_NotifyBoard';
       $ID_Includescipt = @IPS_GetScriptIDByName ( $FileName, $ParentID );
     
       if ($ID_Includescipt === false)
       {
           $NewScriptID = IPS_CreateScript ( 0 );
           IPS_SetParent($NewScriptID, $ParentID);
-          IPS_SetName($NewScriptID, $FileName);
+          #IPS_SetName($NewScriptID, $FileName);
           IPS_SetScriptContent($NewScriptID, $Script);
           
           if($hidden == true) {
@@ -81,6 +81,7 @@ trait STNB_HelperScripts
           $Script = IPS_GetScript($NewScriptID);
           rename(IPS_GetKernelDir().'/scripts/'.$Script['ScriptFile'], IPS_GetKernelDir().'/scripts/'.$FileName);
           IPS_SetScriptFile($NewScriptID, $FileName);
+          IPS_SetName($NewScriptID, substr($FileName, 0, -14));
       }
       return $ID_Includescipt;
     }
