@@ -25,11 +25,6 @@
             $this->RegisterPropertyBoolean("InstanceVisible",false);
             $this->RegisterPropertyBoolean("HtmlVisible",false);
 
-            // Variablen
-            #$this->RegisterVariableInteger("NotifyTypes", "Notify Types", "", -2);
-            #$this->EnableAction ("NotifyTypes");
-            #$this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
-
             // Vorlage anlegen
             $this->CreateSendTemplateScript ($this->InstanceID, false);
         }
@@ -44,6 +39,7 @@
             $this->EnableAction ("NotifyTypes");
             $this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
 
+            // Unsichtbar schalten über Checkbox
             if($this->ReadPropertyBoolean("HtmlVisible")===true) {
               IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),true);
               IPS_SetHidden($this->GetIDForIdent("NotifyWays"),true);
@@ -623,7 +619,7 @@
                   $toggle = 'Nicht senden';
               }	
               
-              $s = $s . '<td style=\'text-align:left;font-size:11;border-bottom:1.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.$CIDs.'</td>';
+              $s = $s . '<td style=\'text-align:left;font-size:11;border-bottom:1.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.str_replace($this->translate("Notification over... "),"",$CIDs).'</td>';
               $s = $s . '<td style=\'border-bottom:1.0px outset;border-top:0.0px outset\' class=\'lst\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/NotificationBoard?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';			
               $s = $s . '</tr>';
           }
