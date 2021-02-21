@@ -45,18 +45,51 @@
     },
     {
       "type": "Label",
+      "caption": "Create area... for Display Notifications"
+    },
+    {
+      "type": "CheckBox",
+      "name": "CreateNotifyTypes", 
+      "caption": "Create Variable for Change Types (for HtmlBox or PopUp)"
+    },
+    {
+      "type": "CheckBox",
+      "name": "CreateHtmlBox", 
+      "caption": "Create Variable for HtmlBox"
+    },
+    {
+      "type": "CheckBox",
+      "name": "CreatePopUpModul", 
+      "caption": "Create PopUp Module"
+    },    
+    {
+      "type": "Label",
+      "caption": ""
+    },    
+    {
+      "type": "Label",
       "caption": "If CheckBox are TRUE, Instances and/or HTML Box is not Visible for WebFront"
     },
     {
       "type": "CheckBox",
-      "name": "InstanceVisible", 
-      "caption": "Notification Instances not Visible"
+      "name": "NotifyTypesVisible", 
+      "caption": "Variable NotifyTypes not Visible (Attention! If you use HtmlBox or PopUp this must be disabled)"
     },
     {
       "type": "CheckBox",
       "name": "HtmlVisible", 
-      "caption": "Html Box not Visible"
+      "caption": "Variable Html Box not Visible"
     },
+    {
+      "type": "CheckBox",
+      "name": "PopUpVisible", 
+      "caption": "PopUp not Visible"
+    },    
+    {
+      "type": "CheckBox",
+      "name": "InstanceVisible", 
+      "caption": "Notification Instances not Visible"
+    },    
     {
       "type": "Label"
     },

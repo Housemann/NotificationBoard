@@ -4,13 +4,17 @@
         "Notification over... ": "Benachrichtigung über... ",
         "NotifyTypes": "Benachrichtigungstypen",
         "Notificationway": "Benachrichtigungsweg",
-        "Receiver": "Empänger"
+        "Receiver": "Empänger",
+        "Notify Types": "Benachrichtigung für...",
+        "Notify Ways": "Benachrichtigung über..."
       },
       "de_DE": {
         "Notification over... ": "Benachrichtigung über... ",
         "NotifyTypes": "Benachrichtigungstypen",
         "Notificationway": "Benachrichtigungsweg",
-        "Receiver": "Empänger"        
+        "Receiver": "Empänger",
+        "Notify Types": "Benachrichtigung für...",
+        "Notify Ways": "Benachrichtigung über..."
       }
   }
 }

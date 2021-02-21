@@ -22,8 +22,15 @@
             // Propertys
             $this->RegisterPropertyString('Username', '');
             $this->RegisterPropertyString('Password', '');
-            $this->RegisterPropertyBoolean("InstanceVisible",false);
+
+            $this->RegisterPropertyBoolean("CreateNotifyTypes",false);
+            $this->RegisterPropertyBoolean("CreateHtmlBox",false);
+            $this->RegisterPropertyBoolean("CreatePopUpModul",false);
+
+            $this->RegisterPropertyBoolean("NotifyTypesVisible",false);
             $this->RegisterPropertyBoolean("HtmlVisible",false);
+            $this->RegisterPropertyBoolean("PopUpVisible",false);
+            $this->RegisterPropertyBoolean("InstanceVisible",false);
 
             // Vorlage anlegen
             $this->CreateSendTemplateScript ($this->InstanceID, false);
@@ -35,18 +42,35 @@
             parent::ApplyChanges();
 
             // Variablen
-            $this->RegisterVariableInteger("NotifyTypes", "Notify Types", "", -2);
-            $this->EnableAction ("NotifyTypes");
-            $this->RegisterVariableString("NotifyWays", "Notify Ways", "~HTMLBox", -1);
+            #if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
+              $this->RegisterVariableInteger("NotifyTypes", $this->translate("Notify Types"), "", -3);
+              $this->EnableAction ("NotifyTypes");
+            #} else {
+            #  $this->UnregisterVariable("NotifyTypes");
+            #}
+            
+            #if($this->ReadPropertyBoolean("CreateHtmlBox")===true) {
+              $this->RegisterVariableString("NotifyWays", $this->translate("Notify Ways"), "~HTMLBox", -2);
+            #} else {
+            #  $this->UnregisterVariable("NotifyWays");
+            #}
+
 
             // Unsichtbar schalten über Checkbox
-            if($this->ReadPropertyBoolean("HtmlVisible")===true) {
-              IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),true);
-              IPS_SetHidden($this->GetIDForIdent("NotifyWays"),true);
-            } else {
-              IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),false);
-              IPS_SetHidden($this->GetIDForIdent("NotifyWays"),false);
-            }
+            #if($this->ReadPropertyBoolean("HtmlVisible")===true) {
+            #  IPS_SetHidden($this->GetIDForIdent("NotifyWays"),true);
+            #} else {
+            #  IPS_SetHidden($this->GetIDForIdent("NotifyWays"),false);
+            #}
+            #if($this->ReadPropertyBoolean("HtmlVisible")===true) {
+            #  IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),true);
+            #} else {
+            #  IPS_SetHidden($this->GetIDForIdent("NotifyTypes"),false);
+            #}
+
+            // PopUp Instanz erstellen
+            #if($this->ReadPropertyBoolean("HtmlVisible")===true) {
+            $this->CreatePopUpByIdent($this->InstanceID, "PopUpNotifyWays", $this->translate("Notify Ways"), -1);
 
             // Sichtbarkeit Instanzen ändern
             $this->ChangeVisibility($this->ReadPropertyBoolean("InstanceVisible"));
@@ -485,6 +509,19 @@
             return $iid;
         }
 
+        private function CreatePopUpByIdent($id, $ident, $name, $position, $moduleid = '{5EA439B8-FB5C-4B81-AA35-1D14F4EA9821}')
+        {
+            $iid = @IPS_GetObjectIDByName($name, $id);
+            if ($iid === false) {
+                $iid = IPS_CreateInstance($moduleid);
+                IPS_SetParent($iid, $id);
+                IPS_SetName($iid, $name);
+                IPS_SetIdent($iid, $ident);
+                IPS_SetPosition($iid, $position);
+            }
+            return $iid;
+        }
+
         private function ChangeVisibility(bool $Value) 
         {
           $ChildIds = IPS_GetChildrenIDs($this->InstanceID);
@@ -558,7 +595,7 @@
         {
           // Mit der Id den Baum durchgehen und das passende Dummy holen und in die HtmlBox schreiben
           $ValueFormattedFromNotifyTypes = GetValueFormatted($this->GetIDForIdent("NotifyTypes"));
-          $ValueInstanzID = @IPS_GetObjectIDByName($ValueFormattedFromNotifyTypes,$this->InstanceID);;
+          $ValueInstanzID = @IPS_GetObjectIDByName($ValueFormattedFromNotifyTypes,$this->InstanceID);
           $ChildIds = IPS_GetChildrenIDs($this->InstanceID);
           $ArrayVarChildIds = array();
           foreach($ChildIds as $Ids) {
@@ -570,7 +607,6 @@
                               $VarIDs = IPS_GetChildrenIDs($InstanceIds['InstanceID']);
                               foreach($VarIDs as $IDs) {
                                   $ArrayVarChildIds[] = IPS_GetName($IDs);
-                                  #asort($ArrayVarChildIds);
                               }
                           break;
                       }
@@ -584,10 +620,10 @@
           $style = $style.'<style type="text/css">';
           $style = $style.'table.test { width: 100%; border-collapse: true;}';
           $style = $style.'Test { border: 2px solid #444455; }';
-          $style = $style.'td.lst { width: 120px; text-align:center; padding: 2px; border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
+          $style = $style.'td.lst { width: 250px; text-align:center; padding: 2px; border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
           $style = $style.'.blue { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(0, 0, 255); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-          $style = $style.'.red { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 0, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-          $style = $style.'.green { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(0, 255, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.red { padding: 35px; color: rgb(255, 255, 255); background-color: rgb(255, 0, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+          $style = $style.'.green { padding: 35px; color: rgb(255, 255, 255); background-color: rgb(0, 255, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
           $style = $style.'.yellow { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 255, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
           $style = $style.'.orange { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 160, 0); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
           $style = $style.'</style>';
@@ -619,13 +655,14 @@
                   $toggle = 'Nicht senden';
               }	
               
-              $s = $s . '<td style=\'text-align:left;font-size:11;border-bottom:1.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.str_replace($this->translate("Notification over... "),"",$CIDs).'</td>';
-              $s = $s . '<td style=\'border-bottom:1.0px outset;border-top:0.0px outset\' class=\'lst\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/NotificationBoard?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';			
+              $s = $s . '<td style=\'text-align:left;font-size:40px;border-bottom:1.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.str_replace($this->translate("Notification over... "),"",$CIDs).'</td>';
+              $s = $s . '<td style=\'font-size:27px; border-bottom:1.0px outset;border-top:0.0px outset\' class=\'lst\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/NotificationBoard?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';			
               $s = $s . '</tr>';
           }
 
           // HTML Box füllen
-          $this->SetValue("NotifyWays", $s);
+          #if($this->ReadPropertyBoolean("CreateHtmlBox")===true)
+            $this->SetValue("NotifyWays", $s);
         }
 
     }
