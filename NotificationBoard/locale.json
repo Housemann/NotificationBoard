@@ -6,7 +6,10 @@
         "Notificationway": "Benachrichtigungsweg",
         "Receiver": "Empänger",
         "Notify Types": "Benachrichtigung für...",
-        "Notify Ways": "Benachrichtigung über..."
+        "Notify Ways": "Benachrichtigung über...",
+        "Notify": "Benachrichtigung",
+        "Send": "Senden",
+        "not Send": "nicht Senden"
       },
       "de_DE": {
         "Notification over... ": "Benachrichtigung über... ",
@@ -14,7 +17,10 @@
         "Notificationway": "Benachrichtigungsweg",
         "Receiver": "Empänger",
         "Notify Types": "Benachrichtigung für...",
-        "Notify Ways": "Benachrichtigung über..."
+        "Notify Ways": "Benachrichtigung über...",
+        "Notify": "Benachrichtigung",
+        "Send": "Senden",
+        "not Send": "nicht Senden"
       }
   }
 }
