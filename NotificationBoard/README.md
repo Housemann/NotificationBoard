@@ -131,10 +131,11 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 "String3"               // String zur freien verwendung
 ```
 
-*** Wenn in der Funktion STNB_SendToNotify() eine MedienId im $Attachment übergeben wird, wird die MedienId genommen sofern diese exisitert. Wird ein Pfad hinterlgegt wird dieser genommen.
+
+*** Wenn in der Funktion STNB_SendToNotify() eine MedienId im $Attachment übergeben wird, wird diese genommen sofern sie existiert. Wird ein Pfad hinterlgegt, wird dieser genommen. Bei der MedienId bekommt man im Parameter $_IPS['MediaID'] und $_IPS['AttachmentPath'] einen Wert zurück.
+
 
 ![Erklaerungrun_NotifyBoard](img/Erklaerungrun_NotifyBoard.png?raw=true)
-
 
 
 
