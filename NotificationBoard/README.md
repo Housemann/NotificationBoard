@@ -26,6 +26,8 @@ Die Variablen und Instanzten können im Formular unsichtbar geschaltet werden.
 In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandwege hinterlegt werden, die über die Funktion vom Modul angesprochen werden.
 
 ![Uebersicht](img/Uebersicht_NotifyBoard.png?raw=true)
+![Uebersicht](img/Uebersicht_NotifyBoard2.png?raw=true)
+![Uebersicht](img/Uebersicht_NotifyBoard3.png?raw=true)
 
 ## 2. Voraussetzungen
 
