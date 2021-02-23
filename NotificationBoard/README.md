@@ -51,6 +51,20 @@ Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run
 
 Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen.
 
+#### Variablen anlegen und bei bedarf unsichtbar machen
+
+Im unteren Bereich vom Modul können die Variablen bei bedarf angelegt werden. Die Variable für den Betreff (Benachrichtigung für...) sollte zwingend angelegt werden, da ansonsten nicht im PopUp oder der HtmlBox zwischen den Werte ngewechselt werden kann. Die erstellung der Html Box oder des PopUps kann wahlweise erfolgen.
+
+![VarAnlegen](img/VarAnlegen.png?raw=true)
+
+
+#### WebHook User und Password hinterlegen
+
+Im unteren Bereich muss für die HTML Box ein WebHook konfiguriert werden, damit das umschalten die entsprechende Variable setzt.
+
+![WebHook](img/WebHook.png?raw=true)
+
+
 #### Hinzufügen Instanz
 
 Zum hinzufügen einer neuen Instanz unter der Liste auf "Hinzufügen" klicken.
