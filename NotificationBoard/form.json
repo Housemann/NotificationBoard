@@ -33,7 +33,7 @@
           {
             "label": "Receiver",
             "name": "Receiver", 
-            "width": "800px",
+            "width": "auto",
             "add": 0,
             "edit": {
                "type": "ValidationTextBox"
@@ -45,17 +45,17 @@
     },
     {
       "type": "Label",
-      "caption": "Create area... for Display Notifications"
+      "caption": "Create area for variables..."
     },
     {
       "type": "CheckBox",
       "name": "CreateNotifyTypes", 
-      "caption": "Create Variable for Change Types (for HtmlBox or PopUp)"
+      "caption": "Create Variable for change Subjects (needed for HtmlBox or PopUp)"
     },
     {
       "type": "CheckBox",
       "name": "CreateHtmlBox", 
-      "caption": "Create Variable for HtmlBox"
+      "caption": "Create Variable HtmlBox"
     },
     {
       "type": "CheckBox",
@@ -68,27 +68,27 @@
     },    
     {
       "type": "Label",
-      "caption": "If CheckBox are TRUE, Instances and/or HTML Box is not Visible for WebFront"
+      "caption": "If checkbox active, then instances or variables become invisible"
     },
     {
       "type": "CheckBox",
       "name": "NotifyTypesVisible", 
-      "caption": "Variable NotifyTypes not Visible (Attention! If you use HtmlBox or PopUp this must be disabled)"
+      "caption": "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled)."
     },
     {
       "type": "CheckBox",
       "name": "HtmlVisible", 
-      "caption": "Variable Html Box not Visible"
+      "caption": "Variable Html Box invisible"
     },
     {
       "type": "CheckBox",
       "name": "PopUpVisible", 
-      "caption": "PopUp not Visible"
+      "caption": "PopUp invisible"
     },    
     {
       "type": "CheckBox",
       "name": "InstanceVisible", 
-      "caption": "Notification Instances not Visible"
+      "caption": "Notification Instances invisible"
     },    
     {
       "type": "Label"

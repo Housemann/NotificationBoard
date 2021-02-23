@@ -9,7 +9,18 @@
         "Notify Ways": "Benachrichtigung über...",
         "Notify": "Benachrichtigung",
         "Send": "Senden",
-        "not Send": "nicht Senden"
+        "not Send": "nicht Senden",
+        "Create area for variables...": "Bereich Variablen anlegen...",
+        "Create Variable for change Subjects (needed for HtmlBox or PopUp)": "Erstellung Variable zum Ändern des Betreffs (benötigt für HtmlBox oder PopUp)",
+        "Create PopUp Module": "Erstellung PopUp Modul",
+        "Create Variable HtmlBox": "Erstellung Variable HtmlBox",
+        "If checkbox active, then instances or variables become invisible": "Wenn Checkbox aktiv, dann werden Instanzen oder Variablen unsichtbar!",
+        "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled).": "Variable \"Benachrichtigung für...\" unsichtbar (Achtung! Bei Verwendung von HtmlBox oder PopUp sollte diese deaktiviert sein).",
+        "Variable Html Box invisible": "Variable Html-Box unsichtbar",
+        "PopUp invisible": "PopUp unsichtbar",
+        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar"
+
+
       },
       "de_DE": {
         "Notification over... ": "Benachrichtigung über... ",
@@ -20,7 +31,18 @@
         "Notify Ways": "Benachrichtigung über...",
         "Notify": "Benachrichtigung",
         "Send": "Senden",
-        "not Send": "nicht Senden"
+        "not Send": "nicht Senden",
+        "Create area for variables...": "Bereich Variablen anlegen...",
+        "Create Variable for change Subjects (needed for HtmlBox or PopUp)": "Erstellung Variable zum Ändern des Betreffs (benötigt für HtmlBox oder PopUp)",
+        "Create PopUp Module": "Erstellung PopUp Modul",
+        "Create Variable HtmlBox": "Erstellung Variable HtmlBox",
+        "If checkbox active, then instances or variables become invisible": "Wenn Checkbox aktiv, dann werden Instanzen oder Variablen unsichtbar!",
+        "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled).": "Variable \"Benachrichtigung für...\" unsichtbar (Achtung! Bei Verwendung von HtmlBox oder PopUp sollte diese deaktiviert sein).",
+        "Variable Html Box invisible": "Variable Html-Box unsichtbar",
+        "PopUp invisible": "PopUp unsichtbar",
+        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar"
+
+
       }
   }
 }

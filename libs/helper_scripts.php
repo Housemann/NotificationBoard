@@ -100,11 +100,10 @@ trait STNB_HelperScripts
       ,$NotifyIcon            = "IPS"
       ,$Message               = "Das ist eine vorlage"
       ,$Attachment            = "" ## MedienId oder Pfad
-      ,$String1               = "filebot"
-      ,$String2               = ""
-      ,$String3               = ""
-  ));
-  }';
+      ,$String1               = "" ## String zur freien verwendung
+      ,$String2               = "" ## String zur freien verwendung
+      ,$String3               = "" ## String zur freien verwendung
+  ));';
 
     $FileName = 'VorlageSendToNotify.ips.php';
     $ID_Includescipt = @IPS_GetScriptIDByName ( $FileName, $ParentID );

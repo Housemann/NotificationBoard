@@ -696,7 +696,7 @@
             // Etwas CSS und HTML
             $style = "";
             $style = $style.'<style type="text/css">';
-            $style = $style.'table.test { width: 100%; border-collapse: true}';
+            $style = $style.'table.test { width: 100%; border-collapse: collapse}';
             $style = $style.'Test { border: 2px solid #444455;}';
             $style = $style.'td.lst { width: 150px; text-align:center; padding: 2px; border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
             $style = $style.'.blue { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(100, 100, 255); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
