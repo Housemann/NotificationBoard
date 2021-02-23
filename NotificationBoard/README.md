@@ -38,6 +38,7 @@ In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandweg
 
  - IPS 5.5
  - Mindestens ein Kommunikationsweg (Webfront, SMS, E-Mail, Telegram etc.)
+ - Verschachtelung im WebFront Editior sollte aktiviert sein, damit man alles sieht
 
 ## 3. Installation
 
