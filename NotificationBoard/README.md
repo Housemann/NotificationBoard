@@ -49,7 +49,7 @@ Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run
 
 ### b. Modul konfigurieren
 
-Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen. 
+Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen.
 
 #### Hinzufügen Instanz
 
@@ -59,7 +59,7 @@ Zum hinzufügen einer neuen Instanz unter der Liste auf "Hinzufügen" klicken.
 
 Im Fenster was sich öffnet dann die InstanzId, Benachrichtigungsweg und Empfänger hinterlegen. 
   - InstanzId -- Hier muss die InstanzId zu einem Kommunikations-Modul hinterlegt werden (SMS, E-Mail, Webfront, Telegtam etc.).
-  - Benachrichtigungsweg -- Das ist der Name um nachher im Script "run_NotifyBoard" in der Case Bedingung unterschieden werden kann.
+  - Benachrichtigungsweg -- Das ist der Name um nachher im Script "run_NotifyBoard" in der Case Bedingung unterschieden werden kann (bereits hinterlegt sind die Instanzen die am Anfang im Formular geladen wurden).
   - Empfänger -- Hier muss je nachdem was man anspricht die E-Mail Adressen (mit ; getrennt) oder eine HandyNummer oder Telegram ChatId rein. Für das Webfront kann es leer bleiben.
 
 ![InstanzWebFrontPopUp](img/InstanzWebFrontPopUp.png?raw=true)
@@ -68,7 +68,63 @@ Danach im Modul auf Übernehmen klicken.
 
 ![Uebernehmen](img/Uebernehmen.png?raw=true)
 
-### Script VorlageSendToNotify.ips.php ausführen
+
+#### Hinzufügen weitere Instanz und Anpassung Skript run_NotifyBoard
+
+Ich füge hier nun ein SMS Modul hinzu und übernehme dieses im Modul...
+
+![InstanzHinzufuegenSMS](img/InstanzHinzufuegenSMS.png?raw=true)
+
+Danach muss im Skript run_NotifyBoard eine neue CASE Bedingung hinzugefügt werden.
+
+![Caserun_NotifyBoard](img/Caserun_NotifyBoard.png?raw=true)
+
+
+### c. run_NotifyBoard konfigurieren und anpassen
+
+Das Skript bekommt aus dem Modul die Werte in die Übergabe-Parameter gesendet.
+
+```php
+  $_IPS['notifyWayName'];
+  $_IPS['NotificationSubject'];
+  $_IPS['InstanceId'];
+  $_IPS['NotifyType'];
+  $_IPS['Message'];
+  $_IPS['Receiver'];
+  $_IPS['ExpirationTime'];
+  $_IPS['NotifyIcon'];
+  $_IPS['MediaID'];
+  $_IPS['AttachmentPath'];
+  $_IPS['String1'];
+  $_IPS['String2'];
+  $_IPS['String3'];
+```
+Diese kann man dann in eigenen Funktionen oder Funktionen in Modulen übergeben. 
+
+Hier eine kurze Beschreibung, welcher Parameter für was steht.
+
+```php
+"notifyWayName"         // Name für Schalter (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
+"NotificationSubject"   // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
+"InstanceId"            // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
+"NotifyType"            // Information / Warnung / Alarm / Aufgabe
+"Message"               // Nachricht
+"Receiver"              // Empfänger
+"ExpirationTime"        // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+"NotifyIcon"            // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
+"MediaID"               // ID zum Medien Objekt in IPS
+"AttachmentPath"        // Pfad zum Medien / Dateiobjekt
+"String1"               // String zur freien verwendung
+"String2"               // String zur freien verwendung
+"String3"               // String zur freien verwendung
+```
+
+![Erklaerungrun_NotifyBoard](img/Erklaerungrun_NotifyBoard.png?raw=true)
+
+
+
+
+#### Script VorlageSendToNotify.ips.php ausführen zum anlegen der neuen Instanz
 
 Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die Funktion zum Aufruf befindet abändern und starten.
 ```php
@@ -93,7 +149,7 @@ Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschiene
 ![ErsteInstanz](img/ErsteInstanz.png?raw=true)
 
 
-### Erste Nachricht senden und empfangen
+#### Erste Nachricht senden und empfangen
 
 Nun kann man im WebFront für die erste Nachricht z.B. das WebFront SendNotification einschalten.
 
@@ -106,3 +162,39 @@ Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meine
 Für ein PopUp schalten wir das PopUp ein und führen das Script "VorlageSendToNotify.ips.php" erneut aus.
 
 ![ErsteNachrichtEmpfangen2](img/ErsteNachrichtEmpfangen2.png?raw=true)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 4. Funktionsreferenz
+
+Diese Funktion in alle benötigten Scripte einfügen worüber Ihr eine Benachrichtigung empfangen wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
+
+```php
+STNB_SendToNotify(
+     $instanceid            = 23913 ## ID von der Notify Instanz
+    ,$NotificationSubject   = "Spülmaschiene"
+    ,$NotifyType            = "alarm"
+    ,$NotifyIcon            = "IPS"
+    ,$Message               = "Das ist eine vorlage"
+    ,$Attachment            = "" ## MedienId oder Pfad
+    ,$String1               = "" ## String zur freien verwendung
+    ,$String2               = "" ## String zur freien verwendung
+    ,$String3               = "" ## String zur freien verwendung
+);
+``` 

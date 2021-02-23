@@ -435,7 +435,7 @@
 
             // Array for RunScript mit werten die uebergeben wurden
             $RunScriptArray = array(
-                "notifyWayName"         => $notifyWayName,            // Name für swich (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
+                "notifyWayName"         => $notifyWayName,            // Name für Schalter (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
                 "NotificationSubject"   => $NotificationSubject,      // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
                 "InstanceId"            => $InstanceID,               // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
                 "NotifyType"            => strtolower($NotifyType),   // Information / Warnung / Alarm / Aufgabe
