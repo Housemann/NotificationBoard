@@ -17,8 +17,33 @@ Modul zum einbinden verschiedener Benachrichtigungen die an und abgeschaltet wer
 
 ## 1. Funktionsumfang
 
-Mit dem Modul kann man sich eigene Nachrichten, über verschieden eingebundene Module zur Kommunikation (SMS, E-Mail, Telegram etc.) senden lassen. Die Kommunikationswege sind pro Nachricht über eine HTML-Box und / oder ein PopUp Modul ein und ausschaltbar. 
+Mit dem Modul kann man sich Nachrichten in Scripten, über verschieden eingebundene Module zur Kommunikation (Webfront, SMS, E-Mail, Telegram etc.) senden lassen. Die Kommunikationswege sind pro Nachricht über eine HTML-Box und / oder ein PopUp Modul ein und ausschaltbar. Die Empfänger und Kommunikationswege werden im Formular hinterlegt.
 
-Zum Versenden einer Nachricht, baut man die Funktion mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff, ein entsprechendes DummyModul angelegt, wo sich die Kommunikationswege schalten lassen.
+Zum Versenden einer Nachricht, baut man die Funktion mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff (z.B. Spülmaschine, Homematic Service Meldung), ein entsprechendes DummyModul angelegt, wo sich die Kommunikationswege schalten lassen. Wenn nun die Funktion im Scipt aufgerufen wird, wird nur über den ausgewählten Weg die Nachricht versandt.
+
+Die Variablen und Instanzten können im Formular unsichtbar geschaltet werden.
+
+In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandwege hinterlegt werden, die über die Funktion vom Modul angesprochen werden.
 
 ![Uebersicht](img/Uebersicht_NotifyBoard.png?raw=true)
+
+## 2. Voraussetzungen
+
+ - IPS 5.5
+ - Mindestens ein Kommunikationsweg (Webfront, SMS, E-Mail, Telegram etc.)
+
+## 3. Installation
+
+### a. Modul hinzufügen
+
+Über das Module Control folgende URL hinzufügen: `https://github.com/Housemann/NotificationBoard`
+Es wird das Modul, sowie drei Scripte automatisch angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht.
+
+### b. Modul konfigurieren
+
+
+
+
+
+
+
