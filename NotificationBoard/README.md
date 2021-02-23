@@ -45,7 +45,7 @@ In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandweg
 
 Über das Module Control folgende URL hinzufügen: `https://github.com/Housemann/NotificationBoard`
 Danach eine neue Instanz hinzufügen und nach Notification Board suchen und dieses installieren.
-Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht.
+Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht. Dieses kann später verschoben oder gelöscht werden.
 
 ### b. Modul konfigurieren
 
