@@ -13,7 +13,7 @@
 
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() {
-            // Diese Zeile nicht löschen.
+            // Diese Zeile nicht löschen..
             parent::Create();
 
             // FormularListe
