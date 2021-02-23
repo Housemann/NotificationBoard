@@ -57,6 +57,10 @@ Im unteren Bereich vom Modul können die Variablen bei bedarf angelegt werden. D
 
 ![VarAnlegen](img/VarAnlegen.png?raw=true)
 
+Hier können die einzelnen Variablen, dass PopUp Modul oder die Instanzen unsichtbar gemacht werden.
+
+![Unsichtbar](img/Unsichtbar.png?raw=true)
+
 
 #### WebHook User und Password hinterlegen
 
