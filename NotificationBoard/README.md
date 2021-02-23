@@ -68,6 +68,29 @@ Danach im Modul auf Übernehmen klicken.
 
 ![Uebernehmen](img/Uebernehmen.png?raw=true)
 
+#### Vorlage-Script VorlageSendToNotify.ips.php ausführen
+
+Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die Funktion zum Aufruf befindet abändern und starten.
+```php
+ print_r(
+  STNB_SendToNotify(
+       $instanceid            = 23913 ## ID von der Notify Instanz
+      ,$NotificationSubject   = "Spülmaschiene"
+      ,$NotifyType            = "alarm"
+      ,$NotifyIcon            = "IPS"
+      ,$Message               = "Das ist eine vorlage"
+      ,$Attachment            = "" ## MedienId oder Pfad
+      ,$String1               = "" ## String zur freien verwendung
+      ,$String2               = "" ## String zur freien verwendung
+      ,$String3               = "" ## String zur freien verwendung
+  ));
+```
+
+Das print_r() dient nur zur Ausgabe der Rückgabe. Beim ersten Aufruf ist das Array noch leer. Später wird das Array mit den Übergabewerten und den Kommunikationswegen gefüllt.  
+
+Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschiene" angelegt.
+
+![ErsteInstanz](img/ErsteInstanz.png?raw=true)
 
 
 
