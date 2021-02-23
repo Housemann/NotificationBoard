@@ -70,7 +70,7 @@ Danach im Modul auf Übernehmen klicken.
 
 
 
-#### Hinzufügen weitere Instanz und Anpassung Skript run_NotifyBoard
+#### Hinzufügen weitere Instanz (z.B. SMS) und Anpassung Skript run_NotifyBoard
 
 Ich füge hier nun ein SMS Modul hinzu und übernehme dieses im Modul...
 
@@ -79,6 +79,17 @@ Ich füge hier nun ein SMS Modul hinzu und übernehme dieses im Modul...
 Danach muss im Skript run_NotifyBoard eine neue CASE Bedingung hinzugefügt werden.
 
 ![Caserun_NotifyBoard](img/Caserun_NotifyBoard.png?raw=true)
+
+Nachdem der neue Kommunikationsweg hinterlegt wurde, steht dieser in allen Benachrichtigungen zur Verfügung. 
+
+![WebFrontSMS](img/WebFrontSMS.png?raw=true)
+
+Wenn man nun das Scirpt ausführt, bekommt man eine SMS an die hinterlegt Nummer.
+
+![HandySMS](img/HandySMS.png?raw=true)
+
+
+
 
 
 ### c. run_NotifyBoard konfigurieren und anpassen
@@ -120,7 +131,7 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 "String3"               // String zur freien verwendung
 ```
 
-*** Wenn in der Funktion STNB_SendToNotify() eine MedienId $Attachment übergeben wird, wird diese genommen sofern existent. Wird ein Pfad hinterlgegt wird dieser genommen.
+*** Wenn in der Funktion STNB_SendToNotify() eine MedienId im $Attachment übergeben wird, wird die MedienId genommen sofern diese exisitert. Wird ein Pfad hinterlgegt wird dieser genommen.
 
 ![Erklaerungrun_NotifyBoard](img/Erklaerungrun_NotifyBoard.png?raw=true)
 
@@ -186,7 +197,7 @@ Für ein PopUp schalten wir das PopUp ein und führen das Script "VorlageSendToN
 
 ## 4. Funktionsreferenz
 
-Diese Funktion in alle benötigten Scripte einfügen worüber Ihr eine Benachrichtigung empfangen wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
+Diese Funktion in alle benötigten Scripte einfügen worüber Ihr eine Benachrichtigung senden wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
 
 ```php
 STNB_SendToNotify(
