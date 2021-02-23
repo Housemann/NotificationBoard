@@ -37,8 +37,8 @@
 
             // VariablenProfil Senden anlegen
             $this->RegisterProfileBooleanEx("STNB.SendButton", "Information", "", "", Array(
-              Array(0 , 'nicht Senden', ''  , '0xFF6464'),
-              Array(1 , 'Senden'      , ''  , '0x64FF64')
+              Array(0 , $this->translate('not Send')  , ''  , '0xFF6464'),
+              Array(1 , $this->translate('Send')      , ''  , '0x64FF64')
             ));
         }
  
@@ -393,7 +393,7 @@
             
             // Benachrichitgungsweg-Name
             $notifyWayName = $notifiWay->NotificationWay;
-            $notifyWayNameVAR = $notifyWayName; ##$this->translate("Notification over... ").
+            $notifyWayNameVAR = $notifyWayName;
             $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
@@ -491,7 +491,7 @@
               foreach($notificationWays as $notifiWay) {            
                 // Benachrichitgungsweg-Name
                 $notifyWayName = $notifiWay->NotificationWay;
-                $notifyWayNameVAR = $notifyWayName; ##$this->translate("Notification over... ").
+                $notifyWayNameVAR = $notifyWayName;
                 $notifyWayNameToIdent = $this->sonderzeichen(IPS_GetName($cId)."_".$notifyWayName);
                 $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
