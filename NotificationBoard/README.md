@@ -69,6 +69,7 @@ Danach im Modul auf Übernehmen klicken.
 ![Uebernehmen](img/Uebernehmen.png?raw=true)
 
 
+
 #### Hinzufügen weitere Instanz und Anpassung Skript run_NotifyBoard
 
 Ich füge hier nun ein SMS Modul hinzu und übernehme dieses im Modul...
@@ -99,25 +100,27 @@ Das Skript bekommt aus dem Modul die Werte in die Übergabe-Parameter gesendet.
   $_IPS['String2'];
   $_IPS['String3'];
 ```
-Diese kann man dann in eigenen Funktionen oder Funktionen in Modulen übergeben. 
+Diese kann man dann in eigenen Funktionen oder Funktionen von Modulen übergeben. 
 
 Hier eine kurze Beschreibung, welcher Parameter für was steht.
 
 ```php
-"notifyWayName"         // Name für Schalter (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
+"notifyWayName"         // Name für CASE-Bedingung (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
 "NotificationSubject"   // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
 "InstanceId"            // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
 "NotifyType"            // Information / Warnung / Alarm / Aufgabe
 "Message"               // Nachricht
 "Receiver"              // Empfänger
-"ExpirationTime"        // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+"ExpirationTime"        // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll (noch nicht in Gebrauch)
 "NotifyIcon"            // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
-"MediaID"               // ID zum Medien Objekt in IPS
-"AttachmentPath"        // Pfad zum Medien / Dateiobjekt
+"MediaID"               // ID zum Medien Objekt in IPS   -- Wird automatisch gefüllt je nachdem was in STNB_SendToNotify() übergeben wird. ***
+"AttachmentPath"        // Pfad zum Medien / Dateiobjekt -- Wird automatisch gefüllt je nachdem was in STNB_SendToNotify() übergeben wird. ***
 "String1"               // String zur freien verwendung
 "String2"               // String zur freien verwendung
 "String3"               // String zur freien verwendung
 ```
+
+*** Wenn in der Funktion STNB_SendToNotify() eine MedienId $Attachment übergeben wird, wird diese genommen sofern existent. Wird ein Pfad hinterlgegt wird dieser genommen.
 
 ![Erklaerungrun_NotifyBoard](img/Erklaerungrun_NotifyBoard.png?raw=true)
 
