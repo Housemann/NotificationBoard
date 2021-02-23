@@ -15,7 +15,7 @@
          {
             "label": "InstanceID",
             "name": "instanceID", 
-            "width": "400px",
+            "width": "auto",
             "add": 0,
             "edit": {
                "type": "SelectInstance"
