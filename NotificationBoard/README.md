@@ -103,3 +103,6 @@ Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meine
 
 ![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
 
+Für ein PopUp schalten wir das PopUp ein und führen das Script "VorlageSendToNotify.ips.php" erneut aus.
+
+![ErsteNachrichtEmpfangen2](img/ErsteNachrichtEmpfangen2.png?raw=true)
