@@ -136,17 +136,17 @@
           //Only add default element if we do not have anything in persistence
           if($this->ReadPropertyString("notificationWays") == "") {			
             $data->elements[0]->values[] = Array(
-              "instanceID"      => IPS_GetInstanceListByModuleID ("{375EAF21-35EF-4BC4-83B3-C780FD8BD88A}")[0],
+              "instanceID"      => @IPS_GetInstanceListByModuleID ("{375EAF21-35EF-4BC4-83B3-C780FD8BD88A}")[0],
               "NotificationWay" => "E-Mail",
               "Receiver"        => "deine@mail.de"
             );
             $data->elements[0]->values[] = Array(
-              "instanceID"      => IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
+              "instanceID"      => @IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
               "NotificationWay" => "WebFront SendNotification",
               "Receiver"        => ""
             );    
             $data->elements[0]->values[] = Array(
-              "instanceID"      => IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
+              "instanceID"      => @IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
               "NotificationWay" => "WebFront PopUp",
               "Receiver"        => ""
             );                    

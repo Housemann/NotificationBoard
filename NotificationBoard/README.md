@@ -48,6 +48,7 @@ Es wird das Modul, sowie drei Scripte automatisch angelegt. Die Scripte "Aktions
 
 ### b. Modul konfigurieren
 
+Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen.    
 
 
 
