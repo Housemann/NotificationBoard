@@ -51,16 +51,21 @@ Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run
 
 Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen. 
 
-Zum hinzufügen einer neuen Instanz unter der Liste auf "Hinzufügen" klicken. 
+#### Hinzufügen Instanz
+
+Zum hinzufügen einer neuen Instanz unter der Liste auf "Hinzufügen" klicken.
+
 ![InstanzHinzufuegen](img/InstanzHinzufuegen.png?raw=true)
 
 Im Fenster was sich öffnet dann die InstanzId, Benachrichtigungsweg und Empfänger hinterlegen. 
   - InstanzId -- Hier muss die InstanzId zu einem Kommunikations-Modul hinterlegt werden (SMS, E-Mail, Webfront, Telegtam etc.).
   - Benachrichtigungsweg -- Das ist der Name um nachher im Script "run_NotifyBoard" in der Case Bedingung unterschieden werden kann.
   - Empfänger -- Hier muss je nachdem was man anspricht die E-Mail Adressen (mit ; getrennt) oder eine HandyNummer oder Telegram ChatId rein. Für das Webfront kann es leer bleiben.
+
 ![InstanzWebFrontPopUp](img/InstanzWebFrontPopUp.png?raw=true)
 
 Danach im Modul auf Übernehmen klicken.
+
 ![Uebernehmen](img/Uebernehmen.png?raw=true)
 
 
