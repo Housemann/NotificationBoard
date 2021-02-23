@@ -68,7 +68,7 @@ Danach im Modul auf Übernehmen klicken.
 
 ![Uebernehmen](img/Uebernehmen.png?raw=true)
 
-#### Vorlage-Script VorlageSendToNotify.ips.php ausführen
+### Script VorlageSendToNotify.ips.php ausführen
 
 Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die Funktion zum Aufruf befindet abändern und starten.
 ```php
@@ -93,6 +93,13 @@ Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschiene
 ![ErsteInstanz](img/ErsteInstanz.png?raw=true)
 
 
+### Erste Nachricht senden und empfangen
 
+Nun kann man im WebFront für die erste Nachricht z.B. das WebFront SendNotification einschalten.
 
+![ErsteNachrichtEinschalten](img/ErsteNachrichtEinschalten.png?raw=true)
+
+Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meinem Fall sehe ich nun eine Benachrichtigung oben rechts im WebFront.
+
+![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
 
