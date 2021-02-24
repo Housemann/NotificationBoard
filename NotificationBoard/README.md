@@ -172,7 +172,7 @@ STNB_SendToNotify(
     ,$NotifyIcon            = "IPS"
     ,$Message               = "Das ist eine vorlage"
     ,$Attachment            = ""
-    ,$String1               = "filebot"
+    ,$String1               = "TeleGramModulName"
     ,$String2               = ""
     ,$String3               = ""
 ```
@@ -183,7 +183,7 @@ Im Skript "run_NotifyBoard", fange ich den $String1-Wert ab und übergebe diesen
 
 ```php
 case "Telegram":
-  TelegramSenden($String1, $Receiver, $NotificationSubject, $Message, $AttachmentPath, "");
+  TelegramSenden($String1, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
   break;
 ```
 
