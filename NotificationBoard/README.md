@@ -161,7 +161,7 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 
 #### String1 / String2 / String3
 
-Die drei String Variablen sind zur freien Verwendung falls man noch irgendwas mit übergebeben möchte. In meinem Fall fülle ich $String1 mit dem Ende der Instanznamen von meinen Telegram Modulen. Ich habe mehrere angelegt, um in einem Chat unterschiedliche Nachrichten von Verschiedenen Bots zu bekommen.
+Die drei String Variablen sind zur freien Verwendung falls man noch irgendwas mit übergebeben möchte. In meinem Fall fülle ich $String1 mit dem Ende der Instanznamen von meinen Telegram Modulen. Hier habe ich mehrere angelegt, um in einem Chat unterschiedliche Nachrichten von Verschiedenen Bots zu bekommen. Daher trage ich im Konfigurator zu Telegram auch keine InstanzId ein, weil diese in meiner Funktion über den Namen ($String1) gesucht wird.
 
 Beispiel:
 ```php
