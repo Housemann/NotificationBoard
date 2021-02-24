@@ -159,6 +159,28 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 
 ![Erklaerungrun_NotifyBoard](img/Erklaerungrun_NotifyBoard.png?raw=true)
 
+#### String1 / String2 / String3
+
+Die drei String Variablen sind zur freien Verwendung falls man noch irgendwas mit übergebeben möchte. In meinem Fall fülle ich $String1 mit dem Ende der Instanznamen von meinen Telegram Modulen. Ich habe mehrere Angelegt um in einem Chat unterschiedliche nachrichten von Verschiedenen Bos zu bekommen. 
+
+Beispiel:
+```php
+STNB_SendToNotify(
+     $instanceid            = 23913
+    ,$NotificationSubject   = "Spülmaschine"
+    ,$NotifyType            = "alarm"
+    ,$NotifyIcon            = "IPS"
+    ,$Message               = "Das ist eine vorlage"
+    ,$Attachment            = ""
+    ,$String1               = "filebot"
+    ,$String2               = ""
+    ,$String3               = ""
+```
+
+Im Skript "run_NotifyBoard", fange ich den $String1-Wert ab und übergebe diesen in eine eigene Funktion, um mir das richtige Telegram Modul zu holen und zu versenden.
+
+![BeispielTelegram1](img/BeispielTelegram1.png?raw=true)
+
 
 
 #### Skript VorlageSendToNotify.ips.php ausführen zum anlegen der neuen Instanz
