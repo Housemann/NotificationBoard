@@ -82,7 +82,7 @@
             if($this->ReadPropertyBoolean("CreatePopUpModul")==true) {
               $this->CreatePopUpByIdent($this->InstanceID, "PopUpNotifyWays", $this->translate("Notify"), -1);
               
-              // PupUp fuellen
+              // PopUp fuellen
               $this->CreateLinkInPopUp($this->InstanceID, $this->GetIDForIdent("NotifyTypes"), $this->GetIDForIdent("PopUpNotifyWays"));
               
               // Unsichtbar schalten über Checkbox
@@ -676,7 +676,7 @@
 
           if($this->ReadPropertyBoolean("CreateNotifyTypes")==true && $this->ReadPropertyBoolean("CreateHtmlBox")==true) {
             // Mit der Id den Baum durchgehen und das passende Dummy holen und in die HtmlBox schreiben
-            $ValueFormattedFromNotifyTypes = GetValueFormatted($this->GetIDForIdent("NotifyTypes"));
+            $ValueFormattedFromNotifyTypes = @GetValueFormatted(@$this->GetIDForIdent("NotifyTypes"));
             $ValueInstanzID = @IPS_GetObjectIDByName($ValueFormattedFromNotifyTypes,$this->InstanceID);
             $ChildIds = IPS_GetChildrenIDs($this->InstanceID);
             $ArrayVarChildIds = array();
