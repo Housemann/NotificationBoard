@@ -3,7 +3,7 @@
 [![PHPModule](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 [![IP-Symcon is awesome!](https://img.shields.io/badge/IP--Symcon-5.5-blue.svg)](https://www.symcon.de)
 
-Modul zum einbinden verschiedener Benachrichtigungen die an und abgeschaltet werden können.
+Modul zum einbinden verschiedener Benachrichtigungsmodule (SMS, E-Mail etc.), die an und abgeschaltet werden können.
 
 ## Dokumentation
 
@@ -17,9 +17,12 @@ Modul zum einbinden verschiedener Benachrichtigungen die an und abgeschaltet wer
 
 ## 1. Funktionsumfang
 
-Mit dem Modul kann man sich Nachrichten in Scripten, über verschieden eingebundene Module zur Kommunikation (Webfront, SMS, E-Mail, Telegram etc.) senden lassen. Die Kommunikationswege sind pro Nachricht über eine HTML-Box und / oder ein PopUp Modul ein und ausschaltbar. Die Empfänger und Kommunikationswege werden im Formular hinterlegt.
+Mit dem Modul kann man sich Info oder Status-Nachrichten aus Scripten senden lassen, die über verschieden eingebundene Module zur Kommunikation (Webfront, SMS, E-Mail, Telegram etc.) versendet werden. Die Kommunikationswege sind pro Nachricht über eine HTML-Box oder ein PopUp Modul ein- und ausschaltbar. Die Empfänger und Kommunikationswege werden im Konfigurationsformular hinterlegt.
 
-Zum Versenden einer Nachricht, baut man die Funktion mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff (z.B. Spülmaschine, Homematic Service Meldung), ein entsprechendes DummyModul angelegt, wo sich die Kommunikationswege schalten lassen. Wenn nun die Funktion im Scipt aufgerufen wird, wird nur über den ausgewählten Weg die Nachricht versandt.
+Das Modul was zur Kommunikation eingebunden wird, muss über eine Funktion aufgerufen werden können. 
+Beispiel z.B. IP-Symcon SMTP_SendMail: SMTP_SendMail (integer $InstanzID, string $Betreff, string $Text)
+
+Zum Versenden einer Nachricht, baut man die Funktion STNB_SendToNotify mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff (z.B. Spülmaschine, Homematic Service Meldung), ein entsprechendes DummyModul angelegt, wo sich darunter die Kommunikationswege umschalten lassen. Wenn nun die Funktion im Scipt aufgerufen wird, wird nur über den ausgewählten Weg die Nachricht versandt.
 
 Die Variablen und Instanzten können im Formular unsichtbar geschaltet werden.
 
@@ -46,11 +49,11 @@ In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandweg
 
 Über das Module Control folgende URL hinzufügen: `https://github.com/Housemann/NotificationBoard`
 Danach eine neue Instanz hinzufügen und nach Notification Board suchen und dieses installieren.
-Es wird das Modul mit drei Scripten angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht. Dieses kann später verschoben oder gelöscht werden.
+Zu dem Modul werden drei Scripte angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht. Dieses kann später verschoben oder gelöscht werden.
 
 ### b. Modul konfigurieren
 
-Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Zum einen E-Mail, zum anderen zwei Webfronts zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn es nicht benötigt wird, kann man diese einfach raus löschen.
+Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt, wenn diese bei euch gefunden werden. Zum einen E-Mail, zum anderen zwei mal das Webfront zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn diese nicht benötigt werden, kann man sie einfach raus löschen.
 
 #### Variablen anlegen und bei bedarf unsichtbar machen
 

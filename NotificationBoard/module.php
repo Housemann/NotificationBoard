@@ -67,7 +67,7 @@
             // Html Box anlegen
             if($this->ReadPropertyBoolean("CreateHtmlBox")==true) {
                 $this->RegisterVariableString("NotifyWays", $this->translate("Notify Ways"), "~HTMLBox", -2);
-                
+
                 // Unsichtbar schalten über Checkbox
                 if($this->ReadPropertyBoolean("HtmlVisible")===true) {
                   IPS_SetHidden(@$this->GetIDForIdent("NotifyWays"),true);
@@ -81,7 +81,11 @@
             // PopUp Instanz erstellen
             if($this->ReadPropertyBoolean("CreatePopUpModul")==true) {
               $this->CreatePopUpByIdent($this->InstanceID, "PopUpNotifyWays", $this->translate("Notify"), -1);
-
+              
+              // PupUp fuellen
+              $this->CreateLinkInPopUp($this->InstanceID, $this->GetIDForIdent("NotifyTypes"), $this->GetIDForIdent("PopUpNotifyWays"));
+              
+              // Unsichtbar schalten über Checkbox
               if($this->ReadPropertyBoolean("PopUpVisible")==true ) {  
                 IPS_SetHidden(@$this->GetIDForIdent("PopUpNotifyWays"),true);
               } else {
