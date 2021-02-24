@@ -225,7 +225,7 @@ Diese Funktion in alle benötigten Skripte einfügen worüber Ihr eine Benachric
 ```php
 STNB_SendToNotify(
      $instanceid            = 23913 ## ID von der Notify Instanz
-    ,$NotificationSubject   = "Spülmaschiene"
+    ,$NotificationSubject   = "Spülmaschine"
     ,$NotifyType            = "alarm"
     ,$NotifyIcon            = "IPS"
     ,$Message               = "Das ist eine vorlage"
