@@ -68,7 +68,7 @@ Hier können die einzelnen Variablen, dass PopUp Modul oder die Instanzen unsich
 
 #### WebHook User und Password hinterlegen
 
-Im unteren Bereich muss für die HTML Box ein WebHook konfiguriert werden, damit das umschalten die entsprechende Variable setzt.
+Im unteren Bereich muss für die HTML Box ein WebHook konfiguriert werden, damit das umschalten die entsprechende Variable klappt.
 
 ![WebHook](img/WebHook.png?raw=true)
 
