@@ -190,7 +190,7 @@
                 return;
             }
 
-            IPS_LogMessage("WebHook GET", print_r($_GET, true));
+            #IPS_LogMessage("WebHook GET", print_r($_GET, true));
        
             $id = $_GET['id'];
             if (isset($id)) {

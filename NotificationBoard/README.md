@@ -22,11 +22,11 @@ Mit dem Modul kann man sich Info oder Status-Nachrichten aus Scripten senden las
 Das Modul was zur Kommunikation eingebunden wird, muss über eine Funktion aufgerufen werden können. 
 Beispiel z.B. IP-Symcon SMTP_SendMail: SMTP_SendMail (integer $InstanzID, string $Betreff, string $Text)
 
-Zum Versenden einer Nachricht, baut man die Funktion STNB_SendToNotify mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff (z.B. Spülmaschine, Homematic Service Meldung), ein entsprechendes DummyModul angelegt, wo sich darunter die Kommunikationswege umschalten lassen. Wenn nun die Funktion im Scipt aufgerufen wird, wird nur über den ausgewählten Weg die Nachricht versandt.
+Zum Versenden einer Nachricht, baut man die Funktion STNB_SendToNotify mit den Übergabeparametern in sein gewünschtes Skript ein. Danach wird zu dem Betreff (z.B. Spülmaschine, Homematic Service Meldung), ein entsprechendes DummyModul angelegt, wo sich darunter die Kommunikationswege umschalten lassen. Wenn nun die Funktion im Scipt aufgerufen wird, wird die Nachricht nur über den ausgewählten Weg versendet.
 
 Die Variablen und Instanzten können im Formular unsichtbar geschaltet werden.
 
-In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandwege hinterlegt werden, die über die Funktion vom Modul angesprochen werden.
+In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandwege hinterlegt werden, die über das Modul angesprochen werden.
 
 Überischt nur Dummy Instanzen
 ![Uebersicht](img/Uebersicht_NotifyBoard.png?raw=true)
@@ -49,15 +49,15 @@ In der Datei "run_NotifyBoard", können eigene Funktionen für andere Versandweg
 
 Über das Module Control folgende URL hinzufügen: `https://github.com/Housemann/NotificationBoard`
 Danach eine neue Instanz hinzufügen und nach Notification Board suchen und dieses installieren.
-Zu dem Modul werden drei Scripte angelegt. Die Scripte "Aktionsscript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum anlegen und senden einer Nachricht. Dieses kann später verschoben oder gelöscht werden.
+Zu dem Modul werden drei Skripte angelegt. Die Skripte "Aktionsskript und run_NotifyBoard" werden zwingend benötigt. Das Skript "VorlageSendToNotify" dient als Vorlage zum  senden einer Nachricht. Dieses kann später verschoben oder gelöscht werden.
 
 ### b. Modul konfigurieren
 
-Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt, wenn diese bei euch gefunden werden. Zum einen E-Mail, zum anderen zwei mal das Webfront zur Benachrichtigung über ein PopUp oder eine Notification im Browser. Wenn diese nicht benötigt werden, kann man sie einfach raus löschen.
+Nach der Installation öffnet sich das Formular, wo man Instanzen zur Kommunikation hinterlegen kann. Am Anfang werden automatisch drei Instanzen hinzugefügt. Wenn diese bei euch existieren, wird automatisch die ObjektId hinterlegt. Zum einen wird E-Mail, zum anderen zwei mal das Webfront (Benachrichtigung PopUp und Notification) hinzugefügt. Wenn diese nicht benötigt werden, kann man sie einfach raus löschen.
 
 #### Variablen anlegen und bei bedarf unsichtbar machen
 
-Im unteren Bereich vom Modul können die Variablen bei bedarf angelegt werden. Die Variable für den Betreff (Benachrichtigung für...) sollte zwingend angelegt werden, da ansonsten nicht im PopUp oder der HtmlBox zwischen den Werte ngewechselt werden kann. Die erstellung der Html Box oder des PopUps kann wahlweise erfolgen.
+Im unteren Bereich vom Modul können die Variablen bei Bedarf angelegt werden. Die Variable für den Betreff (Benachrichtigung für...) sollte zwingend angelegt werden, da ansonsten nicht im PopUp oder der HtmlBox zwischen den Werten gewechselt werden kann. Die Erstellung der Html Box oder des PopUps kann wahlweise erfolgen.
 
 ![VarAnlegen](img/VarAnlegen.png?raw=true)
 
@@ -81,7 +81,7 @@ Zum hinzufügen einer neuen Instanz unter der Liste auf "Hinzufügen" klicken.
 
 Im Fenster was sich öffnet dann die InstanzId, Benachrichtigungsweg und Empfänger hinterlegen. 
   - InstanzId -- Hier muss die InstanzId zu einem Kommunikations-Modul hinterlegt werden (SMS, E-Mail, Webfront, Telegtam etc.).
-  - Benachrichtigungsweg -- Das ist der Name um nachher im Script "run_NotifyBoard" in der Case Bedingung unterschieden werden kann (bereits hinterlegt sind die Instanzen die am Anfang im Formular geladen wurden).
+  - Benachrichtigungsweg -- Das ist der Name um nachher im Skript "run_NotifyBoard" in der Case Bedingung unterschieden werden kann (bereits hinterlegt sind die Instanzen die am Anfang im Formular geladen wurden).
   - Empfänger -- Hier muss je nachdem was man anspricht die E-Mail Adressen (mit ; getrennt) oder eine HandyNummer oder Telegram ChatId rein. Für das Webfront kann es leer bleiben.
 
 ![InstanzWebFrontPopUp](img/InstanzWebFrontPopUp.png?raw=true)
@@ -161,14 +161,14 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 
 
 
-#### Script VorlageSendToNotify.ips.php ausführen zum anlegen der neuen Instanz
+#### Skript VorlageSendToNotify.ips.php ausführen zum anlegen der neuen Instanz
 
 Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die Funktion zum Aufruf befindet abändern und starten.
 ```php
  print_r(
   STNB_SendToNotify(
        $instanceid            = 23913 ## ID von der Notify Instanz
-      ,$NotificationSubject   = "Spülmaschiene"
+      ,$NotificationSubject   = "Spülmaschine"
       ,$NotifyType            = "alarm"
       ,$NotifyIcon            = "IPS"
       ,$Message               = "Das ist eine vorlage"
@@ -196,7 +196,7 @@ Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meine
 
 ![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
 
-Für ein PopUp schalten wir das PopUp ein und führen das Script "VorlageSendToNotify.ips.php" erneut aus.
+Für ein PopUp schalten wir das PopUp ein und führen das Skript "VorlageSendToNotify.ips.php" erneut aus.
 
 ![ErsteNachrichtEmpfangen2](img/ErsteNachrichtEmpfangen2.png?raw=true)
 
@@ -220,7 +220,7 @@ Für ein PopUp schalten wir das PopUp ein und führen das Script "VorlageSendToN
 
 ## 4. Funktionsreferenz
 
-Diese Funktion in alle benötigten Scripte einfügen worüber Ihr eine Benachrichtigung senden wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
+Diese Funktion in alle benötigten Skripte einfügen worüber Ihr eine Benachrichtigung senden wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
 
 ```php
 STNB_SendToNotify(
