@@ -451,26 +451,51 @@
                 "AttachmentPath"        => $AttachmentPath,           // Pfad zum Medien / Dateiobjekt
                 "String1"               => $String1,                  // String zur freien verwendung
                 "String2"               => $String2,                  // String zur freien verwendung
-                "String3"               => $String3                   // String zur freien verwendung
+                "String3"               => $String3,                  // String zur freien verwendung
+                "StatusCreateDummy"     => $ChkCreateDid              // HelperVar ob dummy erstellt wurde
                 );
 
 
-            if(GetValue($variableId) == true) {
+            if(GetValue($variableId) == true && $ChkCreateDid==0) {
               $Status = IPS_RunScriptEx($VarIdRunScript, $RunScriptArray);
               
               // Status in Array schreiben und Mergen
               $ArrayStatusRunScipt = array("StatusRunScript" => $Status);
-              $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArray); 
+              $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArray);
               
               // Durchgaenge Mergen
               array_push($SenderArray,$ArrayMerge);
             }
-          }
+          } ## foreach($notificationWays as $notifiWay)
+          
           if($ChkCreateDid==1) { 
             if($this->ReadPropertyBoolean("CreateNotifyTypes")===true) {
               $this->FillHtmlBox();
             }
+            
+            $RunScriptArrayCreate = array(
+              "notifyWayName"         => "",                              // Name für Schalter (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
+              "NotificationSubject"   => "Create_".$NotificationSubject,  // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
+              "InstanceId"            => $InstanceID,                     // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
+              "NotifyType"            => strtolower($NotifyType),         // Information / Warnung / Alarm / Aufgabe
+              "Message"               => $Message,                        // Nachricht
+              "Receiver"              => $Receiver,                       // Empfänger
+              "ExpirationTime"        => $ExpirationTime,                 // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+              "NotifyIcon"            => $NotifyIcon,                     // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
+              "MediaID"               => $MediaID,                        // ID zum Medien Objekt in IPS
+              "AttachmentPath"        => $AttachmentPath,                 // Pfad zum Medien / Dateiobjekt
+              "String1"               => $String1,                        // String zur freien verwendung
+              "String2"               => $String2,                        // String zur freien verwendung
+              "String3"               => $String3,                        //  String zur freien verwendung
+              "StatusCreateDummy"     => $ChkCreateDid                    // HelperVar ob dummy erstellt wurde
+              );            
+
+            $Status = IPS_RunScriptEx($VarIdRunScript, $RunScriptArrayCreate);
+            $ArrayStatusRunScipt = array("StatusRunScript" => $Status);
+            $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArrayCreate);
+            array_push($SenderArray,$ArrayMerge);
           }
+
           return $SenderArray;
         }
         ############################################################################################################################################

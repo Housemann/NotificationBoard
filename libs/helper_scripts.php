@@ -47,6 +47,7 @@ trait STNB_HelperScripts
   $String1              = $_IPS[\'String1\'];
   $String2              = $_IPS[\'String2\'];
   $String3              = $_IPS[\'String3\'];
+  $StatusCreateDummy    = $_IPS[\'StatusCreateDummy\'];       // HilfsVariable ob dummy erstellt wurde
 
   $IdNotifyBoard        = '.$this->InstanceID.';
 
