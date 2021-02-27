@@ -121,7 +121,7 @@
         public function Destroy() 
         {
             // Remove variable profiles from this module if there is no instance left
-            $InstancesAR = IPS_GetInstanceListByModuleID('{41434F5C-B8DD-ECFA-8591-9E2F2C553FC4}');
+            $InstancesAR = IPS_GetInstanceListByModuleID('{CD0C7974-6044-1795-4F88-9829021D2858}');
             if ((@array_key_exists('0', $InstancesAR) === false) || (@array_key_exists('0', $InstancesAR) === NULL)) {
                 $VarProfileAR = array('STNB.NotificationInstanzen','STNB.SendButton');
                 foreach ($VarProfileAR as $VarProfileName) {
