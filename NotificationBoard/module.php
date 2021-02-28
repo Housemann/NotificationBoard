@@ -117,7 +117,7 @@
             $this->RegisterHook('/hook/'.$this->hook);
 
             // Variablen löchen wo es keinen Benachrichtigungsweg mehr gibt.
-            $this->CleanVarsForNotifyWays();
+            #$this->CleanVarsForNotifyWays();
         }
 
         public function Destroy() 
@@ -539,7 +539,7 @@
         }
         
         ############################################################################################################################################
-        private function CleanVarsForNotifyWays() {
+        public function CleanVarsForNotifyWays() {
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"),true);
           
           $NotifyWays = array();
