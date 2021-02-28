@@ -542,17 +542,15 @@
           
           $NotifyWays = array();
           foreach($notificationWays as $notificationWay) {
-            $notificationWay[] = strval(trim($way['NotificationWay']));
+            $NotifyWays[] = strval(trim(strtolower($notificationWay['NotificationWay'])));
           }
         
           foreach(IPS_GetChildrenIDs($this->InstanceID) as $dummyId) {
             $InstanceIdDummy = @IPS_GetInstance($dummyId);
             if(@$InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
               $variableIds = IPS_GetChildrenIDs($dummyId);
-              #print_r($dummyId."\n");
               foreach($variableIds as $variableId) {
-                #print_r("--".IPS_GetName($variableId)."\n");
-                if(array_search(strval(trim(IPS_GetName($variableId))),$NotifyWays)===false) {
+                if(array_search(strval(trim(strtolower(IPS_GetName($variableId)))),$NotifyWays, true)===false) {
                   echo "NotifyWay ".IPS_GetName($variableId)." wurde nicht gefunden!\n";
                 }
               }
