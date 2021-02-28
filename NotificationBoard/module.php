@@ -559,6 +559,7 @@
               }
             }
           }
+          $this->FillHtmlBox();
         }
 
         private function ReduceGUIDToIdent($guid)
