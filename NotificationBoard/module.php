@@ -117,7 +117,7 @@
             $this->RegisterHook('/hook/'.$this->hook);
 
             // Variablen löchen wo es keinen Benachrichtigungsweg mehr gibt.
-            #$this->CleanVarsForNotifyWays();
+            $this->CleanVarsForNotifyWays();
         }
 
         public function Destroy() 
@@ -478,17 +478,17 @@
             $RunScriptArrayCreate = array(
               "notifyWayName"         => "",                              // Name für Schalter (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
               "NotificationSubject"   => "Create_".$NotificationSubject,  // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
-              "InstanceId"            => $InstanceID,                     // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
-              "NotifyType"            => strtolower($NotifyType),         // Information / Warnung / Alarm / Aufgabe
-              "Message"               => $Message,                        // Nachricht
-              "Receiver"              => $Receiver,                       // Empfänger
-              "ExpirationTime"        => $ExpirationTime,                 // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
-              "NotifyIcon"            => $NotifyIcon,                     // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
-              "MediaID"               => $MediaID,                        // ID zum Medien Objekt in IPS
-              "AttachmentPath"        => $AttachmentPath,                 // Pfad zum Medien / Dateiobjekt
-              "String1"               => $String1,                        // String zur freien verwendung
-              "String2"               => $String2,                        // String zur freien verwendung
-              "String3"               => $String3,                        //  String zur freien verwendung
+              "InstanceId"            => "",                              // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
+              "NotifyType"            => "",                              // Information / Warnung / Alarm / Aufgabe
+              "Message"               => "",                              // Nachricht
+              "Receiver"              => "",                              // Empfänger
+              "ExpirationTime"        => "",                              // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll
+              "NotifyIcon"            => "",                              // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
+              "MediaID"               => "",                              // ID zum Medien Objekt in IPS
+              "AttachmentPath"        => "",                              // Pfad zum Medien / Dateiobjekt
+              "String1"               => "",                              // String zur freien verwendung
+              "String2"               => "",                              // String zur freien verwendung
+              "String3"               => "",                              //  String zur freien verwendung
               "StatusCreateDummy"     => $ChkCreateDid                    // HelperVar ob dummy erstellt wurde
               );            
 
@@ -542,24 +542,27 @@
         public function CleanVarsForNotifyWays() {
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"),true);
           
-          $NotifyWays = array();
-          foreach($notificationWays as $notificationWay) {
-            $NotifyWays[] = strval(trim(strtolower($notificationWay['NotificationWay'])));
-          }
-        
-          foreach(IPS_GetChildrenIDs($this->InstanceID) as $dummyId) {
-            $InstanceIdDummy = @IPS_GetInstance($dummyId);
-            if(@$InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
-              $variableIds = IPS_GetChildrenIDs($dummyId);
-              foreach($variableIds as $variableId) {
-                if(array_search(strval(trim(strtolower(IPS_GetName($variableId)))),$NotifyWays, true)===false) {
-                  if(IPS_VariableExists($variableId))
-                    IPS_DeleteVariable($variableId);
+          if(is_countable($notificationWays)) {
+            $NotifyWays = array();
+            foreach($notificationWays as $notificationWay) {
+              $NotifyWays[] = strval(trim(strtolower($notificationWay['NotificationWay'])));
+            }
+          
+            foreach(IPS_GetChildrenIDs($this->InstanceID) as $dummyId) {
+              $InstanceIdDummy = @IPS_GetInstance($dummyId);
+              if(@$InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
+                $variableIds = IPS_GetChildrenIDs($dummyId);
+                foreach($variableIds as $variableId) {
+                  if(array_search(strval(trim(strtolower(IPS_GetName($variableId)))),$NotifyWays, true)===false) {
+                    if(IPS_VariableExists($variableId))
+                      IPS_DeleteVariable($variableId);
+                  }
                 }
               }
             }
+            // HTML Box aktualieren
+            $this->FillHtmlBox();
           }
-          $this->FillHtmlBox();
         }
 
         private function ReduceGUIDToIdent($guid)
@@ -749,21 +752,21 @@
             // Etwas CSS und HTML
             $style = "";
             $style = $style.'<style type="text/css">';
-            $style = $style.'table.test { width: 100%; border-collapse: collapse}';
-            $style = $style.'Test { border: 2px solid #444455;}';
-            $style = $style.'td.lst { width: 150px; text-align:center; padding: 2px; border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
-            $style = $style.'.blue { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(100, 100, 255); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-            $style = $style.'.red { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 100, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-            $style = $style.'.green { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(100, 255, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-            $style = $style.'.yellow { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 255, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
-            $style = $style.'.orange { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 160, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+            $style = $style.'table.test_nb { width:100%; border-collapse: collapse}';
+            $style = $style.'Test_nb { border: 2px solid #444455;}';
+            $style = $style.'td.lst_nb { width: 150px; text-align:center; padding: 2px; border-right: 0px solid rgba(255, 255, 255, 0.2); border-top: 0px solid rgba(255, 255, 255, 0.1); }';
+            $style = $style.'.blue_nb { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(100, 100, 255); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+            $style = $style.'.red_nb { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 100, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+            $style = $style.'.green_nb { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(100, 255, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+            $style = $style.'.yellow_nb { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 255, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
+            $style = $style.'.orange_nb { padding: 7px; color: rgb(255, 255, 255); background-color: rgb(255, 160, 100); background-icon: linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-icon: -o-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); background-image: -ms-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.3) 100%); }';
             $style = $style.'</style>';
 
             $s = '';	
             $s = $s . $style;
 
             //Tabelle Erstellen
-            $s = $s . '<table class=\'test\'>'; 
+            $s = $s . '<table class=\'test_nb\'>'; 
 
             $s = $s . '<tr>'; 
             #$s = $s . '<td style=\'background: #121212;font-size:12;padding: 5px;\' colspan=\'3\'><B>'.IPS_GetName($InstanceIds['InstanceID']).'</td>';
@@ -778,16 +781,16 @@
                 $toggle = '';
                 $aktWert = GetValue($ID);
                 if ($aktWert === true) {
-                    $class = 'green';
+                    $class = 'green_nb';
                     $toggle = $this->translate('Send');
                     
                 } else {
-                    $class = 'red';
+                    $class = 'red_nb';
                     $toggle = $this->translate('not Send');
                 }	
                 
                 $s = $s . '<td style=\'text-align:left;font-size:15px;border-bottom:1.0px outset;border-top:0.0px outset;color:#FFFFF;\' colspan=\'2\'>'.str_replace($this->translate("Notification over... "),"",$CIDs).'</td>';
-                $s = $s . '<td style=\'font-size:15px; border-bottom:1.0px outset;border-top:0.0px outset\' class=\'lst\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest(); HTTP.open(\'GET\',o.url,true,\''.$Username.'\',\''.$Password.'\'); HTTP.send();};window.xhrGet({ url: \'hook/NotificationBoard?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';
+                $s = $s . '<td style=\'font-size:15px; border-bottom:1.0px outset;border-top:0.0px outset\' class=\'lst_nb\'><div class =\''.$class.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest(); HTTP.open(\'GET\',o.url,true,\''.$Username.'\',\''.$Password.'\'); HTTP.send();};window.xhrGet({ url: \'hook/NotificationBoard?action=toggle&id='.$ID.'\' });">'.$toggle.'</div></td>';
                 $s = $s . '</tr>';
             }
 
