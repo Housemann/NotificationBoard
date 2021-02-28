@@ -115,8 +115,10 @@
 
             // WebHook generieren
             $this->RegisterHook('/hook/'.$this->hook);
+
+            // Variablen löchen wo es keinen Benachrichtigungsweg mehr gibt.
+            $this->CleanVarsForNotifyWays();
         }
- 
 
         public function Destroy() 
         {
@@ -537,7 +539,7 @@
         }
         
         ############################################################################################################################################
-        public function CleanVarsForNotifyWays() {
+        private function CleanVarsForNotifyWays() {
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"),true);
           
           $NotifyWays = array();
@@ -551,7 +553,8 @@
               $variableIds = IPS_GetChildrenIDs($dummyId);
               foreach($variableIds as $variableId) {
                 if(array_search(strval(trim(strtolower(IPS_GetName($variableId)))),$NotifyWays, true)===false) {
-                  echo "NotifyWay ".IPS_GetName($variableId)." wurde nicht gefunden!\n";
+                  if(IPS_VariableExists($variableId))
+                    IPS_DeleteVariable($variableId);
                 }
               }
             }
