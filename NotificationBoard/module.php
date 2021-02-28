@@ -369,7 +369,7 @@
         {
           // Benachrichtigung auslesen
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
-          
+
           // Script Ids holen
           $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
           $VarIdRunScript = IPS_GetObjectIDByName("run_NotifyBoard",$this->InstanceID);
@@ -402,8 +402,8 @@
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
 
             // Variablen anlegen wenn es dummy Modul ist
-            $InstanceIdDummy = IPS_GetInstance($dummyId);
-            if($InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
+            $InstanceIdDummy = @IPS_GetInstance($dummyId);
+            if(@$InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
               $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
               if($variableId===false) {
                 $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "STNB.SendButton", $VarIdActionsScript);
@@ -537,6 +537,28 @@
         }
         
         ############################################################################################################################################
+        public function CleanVarsForNotifyWays() {
+          $notificationWays = json_decode($this->ReadPropertyString("notificationWays"),true);
+          
+          $NotifyWays = array();
+          foreach($notificationWays as $notificationWay) {
+            $notificationWay[] = strval(trim($way['NotificationWay']));
+          }
+        
+          foreach(IPS_GetChildrenIDs($this->InstanceID) as $dummyId) {
+            $InstanceIdDummy = @IPS_GetInstance($dummyId);
+            if(@$InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
+              $variableIds = IPS_GetChildrenIDs($dummyId);
+              #print_r($dummyId."\n");
+              foreach($variableIds as $variableId) {
+                #print_r("--".IPS_GetName($variableId)."\n");
+                if(array_search(strval(trim(IPS_GetName($variableId))),$NotifyWays)===false) {
+                  echo "NotifyWay ".IPS_GetName($variableId)." wurde nicht gefunden!\n";
+                }
+              }
+            }
+          }
+        }
 
         private function ReduceGUIDToIdent($guid)
         {
