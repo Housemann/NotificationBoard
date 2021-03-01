@@ -13,7 +13,7 @@ Modul zum einbinden verschiedener Benachrichtigungsmodule (SMS, E-Mail etc.), di
 2. [Voraussetzungen](#2-voraussetzungen)  
 3. [Installation](#3-installation)  
 4. [Funktionsreferenz](#4-funktionsreferenz)  
-5. [Anhang](#5-anhang)  
+5. [Beispiele](#5-beispiele)  
 
 ## 1. Funktionsumfang
 
@@ -275,7 +275,7 @@ Array
 ```
 
 
-Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschiene" angelegt.
+Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschine" angelegt.
 
 ![ErsteInstanz](img/ErsteInstanz.png?raw=true)
 
@@ -296,22 +296,6 @@ Für ein PopUp schalten wir das PopUp ein und führen das Skript "VorlageSendToN
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 4. Funktionsreferenz
 
 Diese Funktion in alle benötigten Skripte einfügen worüber Ihr eine Benachrichtigung senden wollt. Die Werte ab "NotificationSubject" sind nach belieben selber anzupassen.
@@ -328,4 +312,7 @@ STNB_SendToNotify(
     ,$String2               = "" ## String zur freien verwendung
     ,$String3               = "" ## String zur freien verwendung
 );
-``` 
+```
+
+
+## 5. Beispiele run_NotifyBoard
