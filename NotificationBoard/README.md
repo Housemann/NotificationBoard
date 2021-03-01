@@ -207,7 +207,30 @@ Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die 
 ```
 
 Das print_r() dient nur zur Ausgabe der Rückgabe. Beim ersten Aufruf ist das Array noch leer. Später wird das Array mit den Übergabewerten und den Kommunikationswegen gefüllt.  
+```php
+Array
+(
+    [0] => Array
+        (
+            [StatusRunScript] => 1
+            [notifyWayName] => 
+            [NotificationSubject] => Create_Spülmaschine
+            [InstanceId] => 
+            [NotifyType] => 
+            [Message] => 
+            [Receiver] => 
+            [ExpirationTime] => 
+            [NotifyIcon] => 
+            [MediaID] => 
+            [AttachmentPath] => 
+            [String1] => 
+            [String2] => 
+            [String3] => 
+            [StatusCreateDummy] => 1
+        )
 
+)
+```
 ```php
 Array
 (
