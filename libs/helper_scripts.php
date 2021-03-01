@@ -19,11 +19,11 @@ trait STNB_HelperScripts
               IPS_SetHidden($NewScriptID,true);
             }
             
-            $ScriptName = 'Aktionsskript_'.$NewScriptID;
+            $ScriptName = 'Aktionsskript_'.$NewScriptID.'.ips.php';
             $Script = IPS_GetScript($NewScriptID);
             rename(IPS_GetKernelDir().'/scripts/'.$Script['ScriptFile'], IPS_GetKernelDir().'/scripts/'.$ScriptName);
             IPS_SetScriptFile($NewScriptID, $ScriptName);
-            IPS_SetName($NewScriptID, substr($ScriptName, 0, -6));
+            IPS_SetName($NewScriptID, substr($ScriptName, 0, -14));
         }
         return $ID_Aktionsscipt;
     }
