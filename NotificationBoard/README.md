@@ -315,4 +315,4 @@ STNB_SendToNotify(
 ```
 
 
-## 5. Beispiele run_NotifyBoard
+## 5. Beispiele
