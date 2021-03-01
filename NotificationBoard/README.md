@@ -151,6 +151,7 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 "String1"               // String zur freien verwendung
 "String2"               // String zur freien verwendung
 "String3"               // String zur freien verwendung
+"StatusCreateDummy"     // Erweiterung ob ein Dummy erstellt wurde um ggf. eine andere Aktion anzustoßen
 ```
 
 
@@ -179,8 +180,8 @@ STNB_SendToNotify(
 
 ![BeispielTelegram1](img/BeispielTelegram1.png?raw=true)
 
-Im Skript "run_NotifyBoard", fange ich den $String1-Wert ab und übergebe diesen in eine eigene Funktion, um mir das richtige Telegram Modul zu holen und zu versenden.
-
+Im Skript "run_NotifyBoard", übergebe ich im $String1 den Namen des Telegram-Moduls an eine eigene Funktion im Skript. In der Funktion suche ich dann über den Modulnamen das Modul an das ich bei Telegram senden will.
+Beispiel-Aufruf:
 ```php
 case "Telegram":
   TelegramSenden($String1, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
