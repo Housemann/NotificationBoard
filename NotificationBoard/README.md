@@ -173,7 +173,7 @@ STNB_SendToNotify(
     ,$NotifyIcon            = "IPS"
     ,$Message               = "Das ist eine vorlage"
     ,$Attachment            = ""
-    ,$String1               = "TeleGramModulName"
+    ,$String1               = "Telegrammessenger_FileBot"
     ,$String2               = ""
     ,$String3               = ""
 ```
@@ -181,7 +181,6 @@ STNB_SendToNotify(
 ![BeispielTelegram1](img/BeispielTelegram1.png?raw=true)
 
 Im Skript "run_NotifyBoard", übergebe ich im $String1 den Namen des Telegram-Moduls an eine eigene Funktion im Skript. In der Funktion suche ich dann über den Modulnamen das Modul an das ich bei Telegram senden will.
-Beispiel-Aufruf:
 ```php
 case "Telegram":
   TelegramSenden($String1, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
@@ -208,6 +207,50 @@ Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die 
 ```
 
 Das print_r() dient nur zur Ausgabe der Rückgabe. Beim ersten Aufruf ist das Array noch leer. Später wird das Array mit den Übergabewerten und den Kommunikationswegen gefüllt.  
+
+```php
+Array
+(
+    [0] => Array
+        (
+            [StatusRunScript] => 1
+            [notifyWayName] => WebFront SendNotification
+            [NotificationSubject] => Spülmaschine
+            [InstanceId] => 40366
+            [NotifyType] => ips
+            [Message] => Das ist eine vorlage
+            [Receiver] => 
+            [ExpirationTime] => 86400
+            [NotifyIcon] => Camera
+            [MediaID] => 
+            [AttachmentPath] => 
+            [String1] => 
+            [String2] => 
+            [String3] => 
+            [StatusCreateDummy] => 0
+        )
+
+    [1] => Array
+        (
+            [StatusRunScript] => 1
+            [notifyWayName] => WebFront PopUp
+            [NotificationSubject] => Spülmaschine
+            [InstanceId] => 40366
+            [NotifyType] => ips
+            [Message] => Das ist eine vorlage
+            [Receiver] => 
+            [ExpirationTime] => 86400
+            [NotifyIcon] => Camera
+            [MediaID] => 
+            [AttachmentPath] => 
+            [String1] => 
+            [String2] => 
+            [String3] => 
+            [StatusCreateDummy] => 0
+        )
+)
+```
+
 
 Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschiene" angelegt.
 
