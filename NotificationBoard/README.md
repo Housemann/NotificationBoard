@@ -248,7 +248,11 @@ Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meine
 
 ![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
 
-Nachdem man eine Benachrichtigungsweg eingestellt war, wird das Array pro Benachrichtigungsweg gefüllt.
+Für ein PopUp schalten wir das PopUp ein und führen das Skript "VorlageSendToNotify.ips.php" erneut aus.
+
+![ErsteNachrichtEmpfangen2](img/ErsteNachrichtEmpfangen2.png?raw=true)
+
+Nun sieht man auch, das dass Array mit werten gefüllt wird die als Rückgabne dienen.
 
 ```php
 Array
@@ -292,10 +296,6 @@ Array
         )
 )
 ```
-
-Für ein PopUp schalten wir das PopUp ein und führen das Skript "VorlageSendToNotify.ips.php" erneut aus.
-
-![ErsteNachrichtEmpfangen2](img/ErsteNachrichtEmpfangen2.png?raw=true)
 
 
 
