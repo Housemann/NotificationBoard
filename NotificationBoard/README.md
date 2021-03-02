@@ -132,6 +132,7 @@ Das Skript bekommt aus dem Modul die Werte in die Übergabe-Parameter gesendet.
   $_IPS['String1'];
   $_IPS['String2'];
   $_IPS['String3'];
+  $_IPS['StatusCreateDummy'];
 ```
 Diese kann man dann in eigenen Funktionen oder Funktionen von Modulen übergeben. 
 
@@ -140,10 +141,10 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 ```php
 "notifyWayName"         // Name für CASE-Bedingung (Benachrichtigungsweg SMS, Mail etc.) worübr im RunScript gesendet werden soll
 "NotificationSubject"   // Name der DummyInstanz wofür die Nachricht ist (Müllabfuhr, Klingel, ServiceMedlung)
-"InstanceId"            // InstanceId für Benachrichtigungsweg übergeben (wenn im Formular hinterlegt)
+"InstanceId"            // InstanceId für Benachrichtigungsweg (wenn im Formular hinterlegt wird die InstanzId übergeben vom entsprechenden Modul)
 "NotifyType"            // Information / Warnung / Alarm / Aufgabe
 "Message"               // Nachricht
-"Receiver"              // Empfänger
+"Receiver"              // Empfänger (wird aus dem Formular ausgelesen)
 "ExpirationTime"        // Ablaufzeit wann Nachricht auf gelesen gesetzt werden soll (noch nicht in Gebrauch)
 "NotifyIcon"            // Icons aus IP Symcon (https://www.symcon.de/service/dokumentation/komponenten/icons/)
 "MediaID"               // ID zum Medien Objekt in IPS   -- Wird automatisch gefüllt je nachdem was in STNB_SendToNotify() übergeben wird. ***
@@ -151,7 +152,7 @@ Hier eine kurze Beschreibung, welcher Parameter für was steht.
 "String1"               // String zur freien verwendung
 "String2"               // String zur freien verwendung
 "String3"               // String zur freien verwendung
-"StatusCreateDummy"     // Erweiterung ob ein Dummy erstellt wurde um ggf. eine andere Aktion anzustoßen
+"StatusCreateDummy"     // Rückgabe ob ein Dummy erstellt wurde um ggf. eine andere Aktion anzustoßen (HilfsVariable)
 ```
 
 
@@ -167,7 +168,7 @@ Die drei String Variablen sind zur freien Verwendung falls man noch irgendwas mi
 Beispiel:
 ```php
 STNB_SendToNotify(
-     $instanceid            = 23913
+     $InstanceId            = IPS_GetInstanceListByModuleID ("{CD0C7974-6044-1795-4F88-9829021D2858}")[0]
     ,$NotificationSubject   = "Spülmaschine"
     ,$NotifyType            = "alarm"
     ,$NotifyIcon            = "IPS"
@@ -194,7 +195,7 @@ Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die 
 ```php
  print_r(
   STNB_SendToNotify(
-       $instanceid            = 23913 ## ID von der Notify Instanz
+       $InstanceId            = IPS_GetInstanceListByModuleID ("{CD0C7974-6044-1795-4F88-9829021D2858}")[0] ## ID von der Notify Instanz
       ,$NotificationSubject   = "Spülmaschine"
       ,$NotifyType            = "alarm"
       ,$NotifyIcon            = "IPS"
@@ -206,7 +207,7 @@ Wenn man die ersten Instanzen hinzugefügt hat, kann man das Scirpt wo sich die 
   ));
 ```
 
-Das print_r() dient nur zur Ausgabe der Rückgabe. Beim ersten Aufruf ist das Array noch leer. Später wird das Array mit den Übergabewerten und den Kommunikationswegen gefüllt.  
+Das print_r() dient nur zur Ausgabe der Rückgabe. Beim ersten Aufruf hat das Array noch nicht alle werte, da erst eine neue Instanz erstellt wurde. Später wird das Array mit den Übergabewerten und den Kommunikationswegen gefüllt.  
 ```php
 Array
 (
@@ -231,6 +232,9 @@ Array
 
 )
 ```
+
+Nachdem man eine Benachrichtigungsweg eingestellt war, wird das Array pro Benachrichtigungsweg gefüllt.
+
 ```php
 Array
 (
