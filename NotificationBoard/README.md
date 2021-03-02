@@ -233,6 +233,21 @@ Array
 )
 ```
 
+Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschine" angelegt.
+
+![ErsteInstanz](img/ErsteInstanz.png?raw=true)
+
+
+#### Erste Nachricht senden und empfangen
+
+Nun kann man im WebFront für die erste Nachricht z.B. das WebFront SendNotification einschalten.
+
+![ErsteNachrichtEinschalten](img/ErsteNachrichtEinschalten.png?raw=true)
+
+Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meinem Fall sehe ich nun eine Benachrichtigung oben rechts im WebFront.
+
+![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
+
 Nachdem man eine Benachrichtigungsweg eingestellt war, wird das Array pro Benachrichtigungsweg gefüllt.
 
 ```php
@@ -277,22 +292,6 @@ Array
         )
 )
 ```
-
-
-Nun wurde im Objektbaum im Modul eine neue Instanz mit dem Namen "Spülmaschine" angelegt.
-
-![ErsteInstanz](img/ErsteInstanz.png?raw=true)
-
-
-#### Erste Nachricht senden und empfangen
-
-Nun kann man im WebFront für die erste Nachricht z.B. das WebFront SendNotification einschalten.
-
-![ErsteNachrichtEinschalten](img/ErsteNachrichtEinschalten.png?raw=true)
-
-Danach fürt man noch mal das Skript "VorlageSendToNotify.ips.php" aus. In meinem Fall sehe ich nun eine Benachrichtigung oben rechts im WebFront.
-
-![ErsteNachrichtEmpfangen](img/ErsteNachrichtEmpfangen.png?raw=true)
 
 Für ein PopUp schalten wir das PopUp ein und führen das Skript "VorlageSendToNotify.ips.php" erneut aus.
 
