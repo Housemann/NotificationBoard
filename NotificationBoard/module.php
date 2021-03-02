@@ -281,7 +281,7 @@
 
             if($Receiver !== "") {
               if($MediaID==0 && $AttachmentPath=="") {
-                $Status = SMTP_SendMailEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message);
+                $Status = @SMTP_SendMailEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message);
 
                 if($Status==false) {
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
@@ -290,7 +290,7 @@
                 }
               } elseif($MediaID>0 && $AttachmentPath!=="") {
                 if(IPS_MediaExists($MediaID)) {
-                  $Status = SMTP_SendMailMediaEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $MediaID);
+                  $Status = @SMTP_SendMailMediaEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $MediaID);
 
                   if($Status==false) {
                     $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
@@ -301,7 +301,7 @@
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Sender der Mail, MediaID: $MediaID existiert nicht!\n".$LogMessage, KL_NOTIFY);
                 }
               } elseif($MediaID=="" && $AttachmentPath!=="") {
-                $Status = SMTP_SendMailAttachmentEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
+                $Status = @SMTP_SendMailAttachmentEx ($ModuleIdMail, $Receiver, $NotificationSubject, $Message, $AttachmentPath);
 
                 if($Status==false) {
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);

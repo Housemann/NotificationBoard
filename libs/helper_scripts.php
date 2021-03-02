@@ -6,7 +6,7 @@ trait STNB_HelperScripts
     // AktionsSkript anlegen
     private function CreateActionScript ($ParentID, $hidden=false)
     {
-        $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);STNB_FillHtmlBox('.$this->InstanceID.');}?>';
+        $Script = '<?if ($_IPS[\'SENDER\'] == \'WebFront\') {SetValue($_IPS[\'VARIABLE\'], $_IPS[\'VALUE\']);STNB_FillHtmlBox(IPS_GetInstanceListByModuleID ("{CD0C7974-6044-1795-4F88-9829021D2858}")[0]);}?>';
         $ID_Aktionsscipt = @IPS_GetScriptIDByName ( "Aktionsskript", $ParentID );
 
         if ($ID_Aktionsscipt === false)
@@ -49,7 +49,7 @@ trait STNB_HelperScripts
   $String3              = $_IPS[\'String3\'];
   $StatusCreateDummy    = $_IPS[\'StatusCreateDummy\'];       // HilfsVariable ob dummy erstellt wurde
 
-  $IdNotifyBoard        = '.$this->InstanceID.';
+  $IdNotifyBoard        = IPS_GetInstanceListByModuleID ("{CD0C7974-6044-1795-4F88-9829021D2858}")[0];
 
   ### Der Name im CASE muss Identisch zu dem im Konfigurationsformular sein, damit ein Mapping stattfindet
   switch ($notifyWayName) {
@@ -95,7 +95,7 @@ trait STNB_HelperScripts
  '<? 
  print_r(
   STNB_SendToNotify(
-       $instanceid            = '.$this->InstanceID.'
+       $InstanceId            = IPS_GetInstanceListByModuleID ("{CD0C7974-6044-1795-4F88-9829021D2858}")[0]
       ,$NotificationSubject   = "Vorlage"
       ,$NotifyType            = "alarm"
       ,$NotifyIcon            = "IPS"
