@@ -285,8 +285,6 @@
 
                 if($Status==false) {
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
-                } else {
-                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
                 }
               } elseif($MediaID>0 && $AttachmentPath!=="") {
                 if(IPS_MediaExists($MediaID)) {
@@ -294,8 +292,6 @@
 
                   if($Status==false) {
                     $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
-                  } else {
-                    $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
                   }
                 } else {
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Sender der Mail, MediaID: $MediaID existiert nicht!\n".$LogMessage, KL_NOTIFY);
@@ -305,8 +301,6 @@
 
                 if($Status==false) {
                   $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden der Mail.\n".$LogMessage, KL_ERROR);
-                } else {
-                  $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Mail erfolgreich gesendet\n".$LogMessage, KL_NOTIFY);
                 }
               }
             } else {
@@ -329,9 +323,7 @@
 
           if($Status==false) {
             $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden and Webfront.\n".$LogMessage, KL_ERROR);
-          } else {
-            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Nachricht erfolgreich ans Webfront gesendet.\n".$LogMessage, KL_NOTIFY);
-          }    
+          }   
         }
         ############################################################################################################################################
         // Zum Senden einer Nachricht ans Webfront
@@ -350,9 +342,7 @@
 
           if($Status==false) {
             $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Fehler beim Senden and Webfront.\n".$LogMessage, KL_ERROR);
-          } else {
-            $this->LogMessage(IPS_GetName($_IPS['SELF'])." (". $_IPS['SELF'].") Nachricht erfolgreich ans Webfront gesendet.\n".$LogMessage, KL_NOTIFY);
-          }    
+          } 
         }
         ############################################################################################################################################ 
         ############################################################################################################################################
