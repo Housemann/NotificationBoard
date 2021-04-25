@@ -94,21 +94,12 @@
       "type": "Label"
     },
     {
-      "type": "Label"
-    },
-    {
-       "type": "Label",
-       "caption": "WebHook Control" 
-    },
-    { 
-      "type": "ValidationTextBox",
-      "name": "Username", 
-      "caption": "Username" 
-    },
-	 { 
-      "type": "PasswordTextBox", 
-      "name": "Password",
-      "caption": "Password" 
+      "type": "ExpansionPanel",
+      "caption": "WebHook Control",
+      "items": [      
+        { "type": "ValidationTextBox", "name": "Username", "caption": "Username" },
+        { "type": "PasswordTextBox", "name": "Password", "caption": "Password" }
+      ]
     }
   ]
 }
