@@ -44,27 +44,25 @@
        ]
     },
     {
-      "type": "Label",
-      "caption": "Create area for variables..."
-    },
-    {
-      "type": "CheckBox",
-      "name": "CreateNotifyTypes", 
-      "caption": "Create Variable for change Subjects (needed for HtmlBox or PopUp)"
-    },
-    {
-      "type": "CheckBox",
-      "name": "CreateHtmlBox", 
-      "caption": "Create Variable HtmlBox"
-    },
-    {
-      "type": "CheckBox",
-      "name": "CreatePopUpModul", 
-      "caption": "Create PopUp Module"
-    },    
-    {
-      "type": "Label",
-      "caption": ""
+      "type": "ExpansionPanel",
+      "caption": "Create area for variables...",
+      "items": [
+        {
+          "type": "CheckBox",
+          "name": "CreateNotifyTypes", 
+          "caption": "Create Variable for change Subjects (needed for HtmlBox or PopUp)"
+        },
+        {
+          "type": "CheckBox",
+          "name": "CreateHtmlBox", 
+          "caption": "Create Variable HtmlBox"
+        },
+        {
+          "type": "CheckBox",
+          "name": "CreatePopUpModul", 
+          "caption": "Create PopUp Module"
+        }
+      ]
     },
     {
       "type": "ExpansionPanel",
@@ -91,9 +89,6 @@
             "caption": "Notification Instances invisible"
           }
       ]
-    },
-    {
-      "type": "Label"
     },
     {
       "type": "ExpansionPanel",
