@@ -7,3 +7,6 @@ Folgendes Modul beinhaltet das Notification Board Repository:
 
 - __Notification-Board__ ([Dokumentation](NotificationBoard))  
 	Mit dem Notification Board, lassen sich hinterlegte Benachrichtigungen für verschiedene Kanäle Ein- und Ausschalten.
+
+- __Notification-Board-Test-Center__ ([Dokumentation](NotificationBoard_TestCenter))  
+	Mit dem Notification Board Test Center, lassen sich manuelle Benachrichtigungen über das Webfront zum testen versenden.
