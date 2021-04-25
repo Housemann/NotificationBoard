@@ -65,31 +65,33 @@
     {
       "type": "Label",
       "caption": ""
-    },    
-    {
-      "type": "Label",
-      "caption": "If checkbox active, then instances or variables become invisible"
     },
     {
-      "type": "CheckBox",
-      "name": "NotifyTypesVisible", 
-      "caption": "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled)."
+      "type": "ExpansionPanel",
+      "caption": "If checkbox active, then instances or variables become invisible",
+      "items": [
+          {
+            "type": "CheckBox",
+            "name": "NotifyTypesVisible", 
+            "caption": "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled)."
+          },
+          {
+            "type": "CheckBox",
+            "name": "HtmlVisible", 
+            "caption": "Variable Html Box invisible"
+          },
+          {
+            "type": "CheckBox",
+            "name": "PopUpVisible", 
+            "caption": "PopUp invisible"
+          },    
+          {
+            "type": "CheckBox",
+            "name": "InstanceVisible", 
+            "caption": "Notification Instances invisible"
+          }
+      ]
     },
-    {
-      "type": "CheckBox",
-      "name": "HtmlVisible", 
-      "caption": "Variable Html Box invisible"
-    },
-    {
-      "type": "CheckBox",
-      "name": "PopUpVisible", 
-      "caption": "PopUp invisible"
-    },    
-    {
-      "type": "CheckBox",
-      "name": "InstanceVisible", 
-      "caption": "Notification Instances invisible"
-    },    
     {
       "type": "Label"
     },
