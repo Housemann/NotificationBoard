@@ -1,0 +1,51 @@
+{
+  "translations": {
+      "de": { 
+        "Message Box":"Nachricht",
+        "Subject":"Thema",
+        "New Subject":"Neues Thema anlegen",
+        "MessageType":"Meldungstyp",
+        "Media ID or Path":"Media Id oder Pfad",
+        "String Content":"String Inhalt",
+        "clear":"Leeren",
+        "send":"Senden",
+        "Action":"Aktion",
+        "Debug Log":"Debug Log",
+
+        "Information":"Information",
+        "Warning":"Warnung",
+        "Alert":"Alarm",
+        "ToDo":"Aufgabe",
+
+        "Message Box is empty.":"Nachricht ist leer.",
+        "Subject is not set.":"Thema ist nicht ausgewählt.",
+        "Message-Type is not set.":"Meldungstyp ist nicht ausgewählt.",
+        "Icon is not set.":"Icon ist nicht ausgewählt.",
+        "Message Send":"Nachricht gesendet"
+
+      },
+      "de_DE": {
+        "Message Box":"Nachricht",
+        "Subject":"Thema",
+        "New Subject":"Neues Thema anlegen",
+        "MessageType":"Meldungstyp",
+        "Media ID or Path":"Media Id oder Pfad",
+        "String Content":"String Inhalt",
+        "clear":"Leeren",
+        "send":"Senden",
+        "Action":"Aktion",
+        "Debug Log":"Debug Log",
+
+        "Information":"Information",
+        "Warning":"Warnung",
+        "Alert":"Alarm",
+        "ToDo":"Aufgabe",
+
+        "Message Box is empty.":"Nachricht ist leer.",
+        "Subject is not set.":"Thema ist nicht ausgewählt.",
+        "Message-Type is not set.":"Meldungstyp ist nicht ausgewählt.",
+        "Icon is not set.":"Icon ist nicht ausgewählt.",
+        "Message Send":"Nachricht gesendet"
+      }
+  }
+}

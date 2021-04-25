@@ -1,0 +1,15 @@
+{
+  "id": "{F6869138-2789-4CA5-43C5-95C71D974002}",
+  "name": "NotificationBoard_TestCenter",
+  "type": 3,
+  "vendor": "",
+  "aliases":
+  [
+      "Notification Board Test-Center"
+  ],
+  "url": "https://github.com/Housemann/NotificationBoard",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "STNBTC"
+}

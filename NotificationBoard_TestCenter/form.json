@@ -1,0 +1,6 @@
+{
+  "elements":
+  [
+    { "type": "SelectInstance", "name": "PropertyInstanceID", "caption": "Target" }
+  ]
+}
