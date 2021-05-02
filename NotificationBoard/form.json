@@ -38,6 +38,15 @@
             "edit": {
                "type": "ValidationTextBox"
             }
+          },
+          {
+            "label": "Send default true",
+            "name": "SendDefault", 
+            "width": "100px",
+            "add": 1,
+            "edit": {
+               "type": "CheckBox"
+            }
           }
        ],
        "values": [

@@ -144,17 +144,20 @@
             $data->elements[0]->values[] = Array(
               "instanceID"      => @IPS_GetInstanceListByModuleID ("{375EAF21-35EF-4BC4-83B3-C780FD8BD88A}")[0],
               "NotificationWay" => "E-Mail",
-              "Receiver"        => "deine@mail.de"
+              "Receiver"        => "deine@mail.de",
+              "SendDefault"     => false
             );
             $data->elements[0]->values[] = Array(
               "instanceID"      => @IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
               "NotificationWay" => "WebFront SendNotification",
-              "Receiver"        => ""
+              "Receiver"        => "",
+              "SendDefault"     => false
             );    
             $data->elements[0]->values[] = Array(
               "instanceID"      => @IPS_GetInstanceListByModuleID ("{3565B1F2-8F7B-4311-A4B6-1BF1D868F39E}")[0],
               "NotificationWay" => "WebFront PopUp",
-              "Receiver"        => ""
+              "Receiver"        => "",
+              "SendDefault"     => false
             );                    
           } else {
             //Annotate existing elements
@@ -163,7 +166,8 @@
             foreach($notificationWays as $treeRow) {
               $data->elements[0]->values[] = Array(
                 "NotificationWay" => $treeRow->NotificationWay,
-                "Receiver"        => $treeRow->Receiver
+                "Receiver"        => $treeRow->Receiver,
+                "SendDefault"     => $treeRow->SendDefault
               );				
             }			
           }
@@ -392,6 +396,7 @@
             $notifyWayNameVAR = $notifyWayName;
             $notifyWayNameToIdent = $this->sonderzeichen($NotificationSubject."_".$notifyWayName);
             $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
+            $defaultSend = $notifiWay->SendDefault;
 
             // Variablen anlegen wenn es dummy Modul ist
             $InstanceIdDummy = @IPS_GetInstance($dummyId);
@@ -399,6 +404,9 @@
               $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
               if($variableId===false) {
                 $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "STNB.SendButton", $VarIdActionsScript);
+                
+                if($defaultSend==true)
+                  SetValue($variableId,true);
                 
                 // Variablenprofil aktualisieren
                 if($this->ReadPropertyBoolean("CreateNotifyTypes")==true) {
@@ -447,8 +455,8 @@
                 "StatusCreateDummy"     => $ChkCreateDid              // HelperVar ob dummy erstellt wurde
                 );
 
-
-            if(GetValue($variableId) == true && $ChkCreateDid==0) {
+            // Nur senden wenn Variable aktiv UND kein Dummy erstellt ORDER der DEFAULT WEG true ist
+            if(GetValue($variableId) == true && ($ChkCreateDid==0 || $defaultSend===true)) {
               $Status = IPS_RunScriptEx($VarIdRunScript, $RunScriptArray);
               
               // Status in Array schreiben und Mergen
@@ -499,7 +507,8 @@
         private function CreateNewNotifications() {
           // Benachrichtigung auslesen
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
-          
+          IPS_LogMessage("test",json_encode($notificationWays));
+
           // Script Ids holen
           $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
           $VarIdRunScript = IPS_GetObjectIDByName("run_NotifyBoard",$this->InstanceID);
@@ -515,11 +524,12 @@
                 $notifyWayNameVAR = $notifyWayName;
                 $notifyWayNameToIdent = $this->sonderzeichen(IPS_GetName($cId)."_".$notifyWayName);
                 $notifyWayNameToIdent = $this->specialCharacters($notifyWayNameToIdent);
+                $defaultSend = $notifiWay->SendDefault;
 
                 // Variablen anlegen wenn ein Dummy Modul
                 $InstanceIdDummy = IPS_GetInstance($cId);
                 if($InstanceIdDummy['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {  #Prüfen ob Mudul ein DUmmy Modul ist
-                  $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "STNB.SendButton", $VarIdActionsScript);
+                  $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $cId, 0, "STNB.SendButton", $VarIdActionsScript);
                 }
               }
             }

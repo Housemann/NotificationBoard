@@ -18,7 +18,8 @@
         "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled).": "Variable \"Benachrichtigung für...\" unsichtbar (Achtung! Bei Verwendung von HtmlBox oder PopUp sollte diese deaktiviert sein).",
         "Variable Html Box invisible": "Variable Html-Box unsichtbar",
         "PopUp invisible": "PopUp unsichtbar",
-        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar"
+        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar",
+        "Send default true": "Standart Senden ein"
 
 
       },
@@ -40,8 +41,8 @@
         "Variable NotifyTypes invisible (Attention! When using HtmlBox or PopUp this should be disabled).": "Variable \"Benachrichtigung für...\" unsichtbar (Achtung! Bei Verwendung von HtmlBox oder PopUp sollte diese deaktiviert sein).",
         "Variable Html Box invisible": "Variable Html-Box unsichtbar",
         "PopUp invisible": "PopUp unsichtbar",
-        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar"
-
+        "Notification Instances invisible": "Instanzen für Benachrichtigung unsichtbar",
+        "Send default true": "Standart Senden ein"
 
       }
   }

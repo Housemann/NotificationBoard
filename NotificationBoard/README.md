@@ -95,6 +95,7 @@ Danach im Modul auf Übernehmen klicken.
 #### Hinzufügen weitere Instanz (z.B. SMS) und Anpassung Skript run_NotifyBoard
 
 Ich füge hier nun ein SMS Modul hinzu und übernehme dieses im Modul...
+Mit der Checkbox Standart Senden ein, wird der Benachrichtigungsweg standartmäßig eingeschaltet bei der erstanlage.
 
 ![InstanzHinzufuegenSMS](img/InstanzHinzufuegenSMS.png?raw=true)
 
