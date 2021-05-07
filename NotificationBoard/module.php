@@ -512,8 +512,7 @@
         // Neue Benachrichtigungen (Variablen anlegen) im Apply Changes
         private function CreateNewNotifications() {
           // Benachrichtigung auslesen
-          $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
-          IPS_LogMessage("test",json_encode($notificationWays));
+          $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));          
 
           // Script Ids holen
           $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
