@@ -164,10 +164,16 @@
             $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
 
             foreach($notificationWays as $treeRow) {
+              if(empty($treeRow->SendDefault)) {
+                $ValueDefault = false;
+              } else {
+                $valueDefaut = $treeRow->SendDefault;
+              }
+
               $data->elements[0]->values[] = Array(
                 "NotificationWay" => $treeRow->NotificationWay,
                 "Receiver"        => $treeRow->Receiver,
-                "SendDefault"     => $treeRow->SendDefault
+                "SendDefault"     => $ValueDefault
               );				
             }			
           }
