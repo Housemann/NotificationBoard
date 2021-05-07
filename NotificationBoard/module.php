@@ -393,6 +393,7 @@
             if($dummyId==false) {
               $dummyId = $this->CreateInstanceByIdent($this->InstanceID, $this->ReduceGUIDToIdent($InstanceNameForIdend), $NotificationSubject);
               $ChkCreateDid = 1;
+              $this->SendDebug(__FUNCTION__, "Create DummyId:".$dummyId, 0);
             }
             
             // if true dummyInstance is visible
@@ -411,6 +412,7 @@
               $variableId = @IPS_GetVariableIDByName($notifyWayNameVAR, $dummyId);
               if($variableId===false) {
                 $variableId = $this->CreateVariable ($notifyWayNameToIdent, $notifyWayNameVAR, 0, $dummyId, 0, "STNB.SendButton", $VarIdActionsScript);
+                $this->SendDebug(__FUNCTION__, "Create VariableId:".$variableId, 0);
                 
                 if($defaultSend==true)
                   SetValue($variableId,true);
@@ -502,7 +504,7 @@
             $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArrayCreate);
             array_push($SenderArray,$ArrayMerge);
           }
-          
+
           return $SenderArray;
         }
         ############################################################################################################################################
