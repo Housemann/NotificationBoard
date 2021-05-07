@@ -16,7 +16,6 @@
             "label": "InstanceID",
             "name": "instanceID", 
             "width": "300px",
-            "add": 0,
             "edit": {
                "type": "SelectInstance"
             }
@@ -25,7 +24,6 @@
             "label": "Notificationway",
             "name": "NotificationWay", 
             "width": "300px",
-            "add": 0,
             "edit": {
                "type": "ValidationTextBox"
             }
@@ -34,7 +32,6 @@
             "label": "Receiver",
             "name": "Receiver", 
             "width": "auto",
-            "add": 0,
             "edit": {
                "type": "ValidationTextBox"
             }
@@ -43,7 +40,6 @@
             "label": "Send default true",
             "name": "SendDefault", 
             "width": "100px",
-            "add": 1,
             "edit": {
                "type": "CheckBox"
             }
