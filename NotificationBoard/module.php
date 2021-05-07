@@ -371,6 +371,7 @@
         {
           // Benachrichtigung auslesen
           $notificationWays = json_decode($this->ReadPropertyString("notificationWays"));
+          $this->SendDebug(__FUNCTION__, json_encode($notificationWays), 0);
 
           // Script Ids holen
           $VarIdActionsScript = IPS_GetObjectIDByName("Aktionsskript",$this->InstanceID);
@@ -501,7 +502,7 @@
             $ArrayMerge = array_merge($ArrayStatusRunScipt, $RunScriptArrayCreate);
             array_push($SenderArray,$ArrayMerge);
           }
-
+          
           return $SenderArray;
         }
         ############################################################################################################################################
